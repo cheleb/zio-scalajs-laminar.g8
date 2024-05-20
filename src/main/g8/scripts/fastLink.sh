@@ -16,7 +16,7 @@ done
 
 . \$BUILD_ENV_FILE
 
-filename=examples/client/target/scala-\$SCALA_VERSION/client-fastopt/main.js
+filename=modules/client/target/scala-\$SCALA_VERSION/client-fastopt/main.js
 
 echo "Waiting for client-fastopt/main.js to be compiled..."
 until [ -e \$filename ]; do

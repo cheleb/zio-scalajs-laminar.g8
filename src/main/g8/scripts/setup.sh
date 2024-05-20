@@ -4,7 +4,7 @@ rm -f \$NPM_DEV_STARTED
 
 filename_lock=node_modules/.package-lock.json
 
-cd examples/client
+cd modules/client
 
 if [ ! -f "\$filename_lock" ]; then
     echo "First time setup: Installing npm dependencies..."

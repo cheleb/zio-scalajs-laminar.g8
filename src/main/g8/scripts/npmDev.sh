@@ -9,7 +9,7 @@ done
 
 echo "Starting npm dev server for client"
 echo " * SCALA_VERSION=\$SCALA_VERSION"
-rm -f examples/client/target/scala-\$SCALA_VERSION/client-fastopt/main.js
+rm -f modules/client/target/scala-\$SCALA_VERSION/client-fastopt/main.js
 touch \$NPM_DEV_STARTED
-cd examples/client
+cd modules/client
 npm run dev

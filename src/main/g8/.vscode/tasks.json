@@ -1,0 +1,63 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "demo",
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "setup",
+                "runDemo"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build"
+            }
+        },
+        {
+            "label": "setup",
+            "type": "shell",
+            "command": "./scripts/setup.sh",
+            "presentation": {
+                "panel": "dedicated",
+                "group": "runDevCmd",
+                "close": true
+            },
+            "group": "build"
+        },
+        {
+            "label": "runDemo",
+            "dependsOrder": "parallel",
+            "dependsOn": [
+                "fastLink",
+                "npmDev"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build"
+            }
+        },
+        {
+            "label": "fastLink",
+            "type": "shell",
+            "command": "./scripts/fastLink.sh",
+            "presentation": {
+                "panel": "dedicated",
+                "group": "runDevCmd"
+            },
+            "group": "build"
+        },
+        {
+            "label": "npmDev",
+            "type": "shell",
+            "command": "./scripts/npmDev.sh",
+            "presentation": {
+                "panel": "dedicated",
+                "group": "runDevCmd"
+            },
+            "group": "build"
+        }
+    ]
+}

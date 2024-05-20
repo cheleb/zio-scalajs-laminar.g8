@@ -1,0 +1,11 @@
+{
+    "files.watcherExclude": {
+        "**/target": true
+    },
+    "editor.formatOnSave": true,
+    "[html]": {
+        "editor.formatOnSave": false
+    },
+    "metals.inlayHints.implicitConversions.enable": false,
+    "metals.inlayHints.inferredTypes.enable": false
+}

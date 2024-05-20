@@ -138,6 +138,11 @@ lazy val client = scalajsProject("client")
     }
   )
   .settings(scalacOptions ++= usedScalacOptions)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.raquo" %%% "laminar" % laminarVersion
+    )
+  )
   .dependsOn(sharedJs)
   .settings(
     publish / skip := true

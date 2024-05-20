@@ -2,6 +2,8 @@ package samples
 
 import org.scalajs.dom
 import com.raquo.laminar.api.L.*
+
+$if(scalariform.truthy) $
 import be.doeraene.webcomponents.ui5.*
 
 case class Sample(name: String, component: HtmlElement)
@@ -66,3 +68,18 @@ object App extends App {
   val containerNode = dom.document.getElementById("app")
   render(containerNode, myApp)
 }
+
+$else$
+
+@main def hello: Unit = 
+
+  val myApp = 
+    div(
+      h1("Hello World")
+    )
+
+  val containerNode = dom.document.getElementById("app")
+  render(containerNode, myApp)
+
+
+$endif$
