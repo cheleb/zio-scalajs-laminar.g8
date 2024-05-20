@@ -1,0 +1,10 @@
+h1 {
+    box-shadow: none;
+}
+
+
+.form>div {
+    display: grid;
+    width: 15rem;
+    margin-bottom: 0.5rem;
+}
