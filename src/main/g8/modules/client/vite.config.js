@@ -18,7 +18,7 @@ export default defineConfig({
     build: {
         sourcemap: true,
     },
-    base: "/laminar-form-derivation/demo",
+    // base: "/$projectId$",
 
 });
 
