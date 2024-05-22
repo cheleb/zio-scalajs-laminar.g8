@@ -11,10 +11,12 @@
   },
   "license": "MIT",
   "dependencies": {
+$if(scalariform.truthy) $
     "@ui5/webcomponents": "1.24.0",
     "@ui5/webcomponents-fiori": "1.24.0",
     "@ui5/webcomponents-icons": "1.24.0",
     "highlight.js": "^11.8.0",
+$endif$
     "jsdom": "^9.9.0"
   },
   "devDependencies": {

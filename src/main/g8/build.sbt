@@ -7,6 +7,18 @@ val tapirVersion = "$tapir_version$"
 
 val laminarVersion = "$laminar_version$"
 
+val Versions = new {
+  val zio        = "2.1.1"
+  val tapir      = "1.10.7"
+  val zioLogging = "2.2.4"
+  val zioConfig  = "4.0.2"
+  val sttp       = "3.9.6"
+  val javaMail   = "1.6.2"
+  val stripe     = "25.7.0"
+  val flywaydb   = "10.13.0"
+}
+
+
 inThisBuild(
   List(
     scalaVersion := scala3,
@@ -27,20 +39,34 @@ lazy val generator = project
     libraryDependencies += "org.slf4j" % "slf4j-simple" % "2.0.13"
   )
 
-val dev = sys.env.get("DEV").getOrElse("demo")
+//
+// Define the build mode:
+// - prod: production mode
+//         optimized, CommonJSModule
+//         webjar packaging
+// - demo: demo mode (default)
+//         optimized, CommonJSModule
+//         static files
+// - dev:  development mode
+//         no optimization, ESModule
+//         static files, hot reload with vite.
+//
+// Default is "demo" mode, because the vite build does not take parameters.
+//   (see vite.config.js)
+val mode = sys.env.get("MOD").getOrElse("demo")
 
-val serverPlugins = dev match {
+val serverPlugins = mode match {
   case "prod" =>
     Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin)
   case _ => Seq()
 }
 
-def scalaJSModule = dev match {
+def scalaJSModule = mode match {
   case "prod" => ModuleKind.CommonJSModule
   case _      => ModuleKind.ESModule
 }
 
-val serverSettings = dev match {
+val serverSettings = mode match {
   case "prod" =>
     Seq(
       Compile / compile := ((Compile / compile) dependsOn scalaJSPipeline).value,
@@ -64,7 +90,7 @@ lazy val root = project
   )
 
 val staticGenerationSettings =
-  if (dev == "prod")
+  if (mode == "prod")
     Seq(
       Assets / resourceGenerators += Def
         .taskDyn[Seq[File]] {
@@ -76,7 +102,7 @@ val staticGenerationSettings =
               Seq(
                 "samples.BuildIndex",
                 "--title",
-                s""""Laminar Form Derivation v \${version.value}"""",
+                s""""$name$ v \${version.value}"""",
                 "--resource-managed",
                 rootFolder
               ).mkString(" ", " ", "")
@@ -88,6 +114,12 @@ val staticGenerationSettings =
   else
     Seq()
 
+val commonDependencies = Seq(
+  "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
+  "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
+  "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp
+)
+
 lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(serverPlugins: _*)
@@ -98,7 +130,7 @@ lazy val server = project
     fork := true,
     scalaJSProjects := Seq(client),
     Assets / pipelineStages := Seq(scalaJSPipeline),
-    libraryDependencies ++= Seq(
+    libraryDependencies ++= commonDependencies ++ Seq(
       "io.github.iltotore" %% "iron-zio-json" % "2.5.0",
       "com.softwaremill.sttp.tapir" %% "tapir-zio" % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server" % tapirVersion,
@@ -126,7 +158,7 @@ lazy val client = scalajsProject("client")
   .settings(
     scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { config =>
-      dev match {
+      mode match {
         case "prod" =>
           config.withModuleKind(scalaJSModule)
         case _ =>
@@ -140,7 +172,17 @@ lazy val client = scalajsProject("client")
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(
     libraryDependencies ++= Seq(
+      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"    % Versions.tapir,
+      "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
+      "dev.zio"                       %%% "zio-json"          % "0.6.2",
+      "dev.zio"                       %%% "zio-prelude"       % "1.0.0-RC26",
+      $if(scalariform.truthy)$
+      // pull laminar 17.0.0
+      "dev.cheleb" %%% "laminar-form-derivation-ui5" % "0.12.0"
+      $else$
       "com.raquo" %%% "laminar" % laminarVersion
+      $endif$
     )
   )
   .dependsOn(sharedJs)
@@ -150,7 +192,11 @@ lazy val client = scalajsProject("client")
 
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
+  .disablePlugins(RevolverPlugin)
   .in(file("modules/shared"))
+  .settings(
+    libraryDependencies ++= commonDependencies
+  )
   .settings(
     publish / skip := true
   )
@@ -169,7 +215,7 @@ def nexusNpmSettings =
     )
     .toSeq
 
-def scalaJSPlugin = dev match {
+def scalaJSPlugin = mode match {
   case "prod" => ScalaJSBundlerPlugin
   case _      => ScalaJSPlugin
 }
@@ -180,6 +226,7 @@ def scalajsProject(projectId: String): Project =
     base = file(s"modules/\$projectId")
   )
     .enablePlugins(scalaJSPlugin)
+    .disablePlugins(RevolverPlugin)
     .settings(nexusNpmSettings)
     .settings(Test / requireJsDomEnv := true)
     .settings(

@@ -4,7 +4,9 @@ import zio.*
 import sttp.tapir.*
 import sttp.tapir.server.ServerEndpoint
 
-class HealthController private extends BaseController with HealthEndpoint {
+class HealthController private
+    extends BaseController
+    with endpoints.HealthEndpoint {
 
   val health = healthEndpoint
     .serverLogicSuccess[Task](_ => ZIO.succeed("OK"))

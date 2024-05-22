@@ -3,6 +3,14 @@
 
 This is ZIO, Scala.js and Laminar project.
 
+## Pre-requisites
+
+- JDK
+- sbt
+- Node.js
+
+Decent vesions of JDK, sbt and Node.js are required.
+
 ## Getting started
 
 To get started, run the following command:
@@ -19,13 +27,6 @@ http://localhost:8080/public/index.html
 - Scala.js
 - Laminar
 
-## Pre-requisites
-
-- JDK
-- sbt
-- Node.js
-
-Decent vesions of JDK, sbt and Node.js are required.
 
 
 ## Development
@@ -62,14 +63,39 @@ The developpement environment should setup itself.
 * runDemo
   * sbt ~client/fastLinkJS
   * vite serve
+  * runServer with reStart on file change
 
 
 
 ### Manualy start the development server
 
+* Install the npm dependencies:
+
+```bash
+cd modules/client
+npm install
+```
+
+* Start the development servers:
+  * In one terminal, run the following command:
+```bash
+MOD=dev sbt ~client/fastLinkJS
+```
+  * In another terminal, run the following command:
+```bash
+cd modules/client
+npm run dev
+```
+  * In another terminal, run the following command:
+```bash
+MOD=dev sbt server/run
+```
+
+
+
 To start the development server, run the following command:
 
 ```bash
-DEV=dev NODE_OPTIONS="--openssl-legacy-provider" sbt ~client/fastLinkJS
+MOD=dev NODE_OPTIONS="--openssl-legacy-provider" sbt ~client/fastLinkJS
 ```
 

@@ -1,4 +1,4 @@
-package samples
+package endpoints
 
 import sttp.tapir.*
 import zio.*
