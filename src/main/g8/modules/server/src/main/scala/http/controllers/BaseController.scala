@@ -1,4 +1,4 @@
-package samples
+package shttp.amples
 
 import sttp.tapir.server.ServerEndpoint
 import zio.Task

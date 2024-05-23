@@ -1,4 +1,4 @@
-package samples
+package http
 
 import zio.*
 import zio.http.*
@@ -6,7 +6,7 @@ import sttp.tapir.files.*
 import sttp.tapir.*
 import sttp.tapir.server.ziohttp.*
 
-object SampleServer extends ZIOAppDefault {
+object HttpServer extends ZIOAppDefault {
 
   val webJarRoutes = staticResourcesGetServerEndpoint[Task]("public")(
     this.getClass.getClassLoader,
@@ -14,13 +14,12 @@ object SampleServer extends ZIOAppDefault {
   )
 
   val serrverProgram =
-    for
-      _ <- ZIO.succeed(println("Hello world"))
-      endpoints <- HttpApi.endpointsZIO
-      _ <- Server.serve(
-        ZioHttpInterpreter(ZioHttpServerOptions.default)
-          .toHttp(webJarRoutes :: endpoints)
-      )
+    for _ <- ZIO.succeed(println("Hello world"))
+    endpoints <- HttpApi.endpointsZIO
+    _ <- Server.serve(
+      ZioHttpInterpreter(ZioHttpServerOptions.default)
+        .toHttp(webJarRoutes :: endpoints)
+    )
     yield ()
 
   override def run =

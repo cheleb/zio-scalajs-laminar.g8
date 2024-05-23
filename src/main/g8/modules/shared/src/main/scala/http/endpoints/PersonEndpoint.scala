@@ -1,4 +1,4 @@
-package endpoints
+package http.endpoints
 
 import sttp.tapir.*
 import zio.*

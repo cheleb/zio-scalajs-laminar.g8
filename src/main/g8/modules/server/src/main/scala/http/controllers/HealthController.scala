@@ -1,4 +1,4 @@
-package samples
+package http.controllers
 
 import zio.*
 import sttp.tapir.*
