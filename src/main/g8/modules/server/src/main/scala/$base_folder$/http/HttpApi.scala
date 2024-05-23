@@ -7,13 +7,15 @@ import controllers.*
 
 //https://tapir.softwaremill.com/en/latest/server/logic.html
 object HttpApi {
-  def gatherRoutes(
+  private def gatherRoutes(
       controllers: List[BaseController]
   ): List[ServerEndpoint[Any, Task]] =
     controllers.flatMap(_.routes)
 
-  def makeControllers = for healthController <- HealthController.makeZIO
-  yield List(healthController)
+  private def makeControllers = for {
+    healthController <- HealthController.makeZIO
+    personController <- PersonController.makeZIO
+  } yield List(healthController, personController)
 
   val endpointsZIO = makeControllers.map(gatherRoutes)
 }

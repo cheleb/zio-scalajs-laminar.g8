@@ -12,5 +12,5 @@ class PersonServiceLive private extends PersonService {
 }
 
 object PersonServiceLive {
-  val live: ULayer[PersonService] = ZLayer.succeed(new PersonServiceLive)
+  val layer: ULayer[PersonService] = ZLayer.succeed(new PersonServiceLive)
 }

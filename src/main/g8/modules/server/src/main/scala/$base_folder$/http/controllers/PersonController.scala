@@ -18,6 +18,6 @@ class PersonController private (personService: PersonService)
 }
 
 object PersonController {
-  def makeZIO =
+  def makeZIO: URIO[PersonService, PersonController] =
     ZIO.service[PersonService].map(new PersonController(_))
 }

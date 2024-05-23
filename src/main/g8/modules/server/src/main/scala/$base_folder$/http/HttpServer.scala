@@ -6,6 +6,8 @@ import sttp.tapir.files.*
 import sttp.tapir.*
 import sttp.tapir.server.ziohttp.*
 
+import $package$.service.*
+
 object HttpServer extends ZIOAppDefault {
 
   val webJarRoutes = staticResourcesGetServerEndpoint[Task]("public")(
@@ -25,6 +27,7 @@ object HttpServer extends ZIOAppDefault {
   override def run =
     serrverProgram
       .provide(
-        Server.default
+        Server.default,
+        PersonServiceLive.layer
       )
 }
