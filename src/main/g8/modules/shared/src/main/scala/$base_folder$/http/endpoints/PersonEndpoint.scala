@@ -1,11 +1,11 @@
-package http.endpoints
+package $package$.http.endpoints
 
 import sttp.tapir.*
 import zio.*
 import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
-import domain.*
+import $package$.domain.*
 
 trait PersonEndpoint extends BaseEndpoint {
   val createEndpoint = baseEndpoint

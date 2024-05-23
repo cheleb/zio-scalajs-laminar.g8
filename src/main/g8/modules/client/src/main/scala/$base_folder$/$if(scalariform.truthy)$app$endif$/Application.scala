@@ -1,4 +1,4 @@
-package app
+package $package$.app
 
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom

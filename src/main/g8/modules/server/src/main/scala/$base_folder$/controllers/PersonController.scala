@@ -1,10 +1,10 @@
-package http.controllers
+package $package$.http.controllers
 
 import zio.*
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.ztapir.*
-import endpoints.PersonEndpoint
-import service.PersonService
+import $package$.http.endpoints.PersonEndpoint
+import $package$.service.PersonService
 
 class PersonController private (personService: PersonService)
     extends BaseController

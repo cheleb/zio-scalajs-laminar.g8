@@ -1,7 +1,7 @@
-package service
+package $package$.service
 
 import zio.*
-import domain.*
+import $package$.domain.*
 
 trait PersonService {
   def register(person: Person): Task[Person]

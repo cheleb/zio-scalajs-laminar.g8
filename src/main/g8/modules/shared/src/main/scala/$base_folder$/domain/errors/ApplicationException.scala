@@ -1,4 +1,4 @@
-package domain.errors
+package $package$.domain.errors
 
 sealed abstract class ApplicationException(message: String)
     extends RuntimeException(message)

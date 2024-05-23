@@ -1,4 +1,4 @@
-package domain.errors
+package $package$.domain.errors
 
 import sttp.model.StatusCode
 

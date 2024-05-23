@@ -1,7 +1,7 @@
-package endpoints
+package $package$.http.endpoints
 
 import sttp.tapir.*
-import domain.errors.HttpError
+import $package$.domain.errors.HttpError
 
 trait BaseEndpoint {
   val baseEndpoint: Endpoint[Unit, Unit, Throwable, Unit, Any] = endpoint

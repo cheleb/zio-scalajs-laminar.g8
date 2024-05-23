@@ -1,4 +1,4 @@
-package shttp.amples
+package $package$.http.controllers
 
 import sttp.tapir.server.ServerEndpoint
 import zio.Task
