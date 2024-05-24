@@ -13,7 +13,11 @@ trait PersonEndpoint extends BaseEndpoint {
     .name("person")
     .post
     .in("person")
-    .in(jsonBody[Person])
+    .in(
+      jsonBody[Person]
+        .description("Person to create")
+        .example(Person("John", 30, Left(Cat("Fluffy"))))
+    )
     .out(jsonBody[Person])
     .description("Create person")
 
