@@ -6,6 +6,7 @@ import sttp.tapir.files.*
 import sttp.tapir.*
 
 import sttp.tapir.server.ziohttp.*
+import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import $package$.service.*
 

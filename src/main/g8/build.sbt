@@ -33,6 +33,7 @@ inThisBuild(
 lazy val generator = project
   .in(file("build/generator"))
   .enablePlugins(SbtTwirl)
+  .disablePlugins(RevolverPlugin)
   .settings(
     libraryDependencies += "com.github.scopt" %% "scopt" % "4.1.0",
     libraryDependencies += "com.lihaoyi" %% "os-lib" % "0.10.1",
@@ -55,6 +56,9 @@ lazy val generator = project
 //   (see vite.config.js)
 val mode = sys.env.get("MOD").getOrElse("demo")
 
+//
+// On dev mode, server will only serve API and static files.
+//
 val serverPlugins = mode match {
   case "prod" =>
     Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin)
@@ -71,7 +75,9 @@ val serverSettings = mode match {
     Seq(
       Compile / compile := ((Compile / compile) dependsOn scalaJSPipeline).value,
       Assets / WebKeys.packagePrefix := "public/",
-      Runtime / managedClasspath += (Assets / packageBin).value
+      Runtime / managedClasspath += (Assets / packageBin).value,
+      scalaJSProjects := Seq(client),
+      Assets / pipelineStages := Seq(scalaJSPipeline)
     )
   case _ => Seq()
 }
@@ -85,6 +91,7 @@ lazy val root = project
     sharedJvm,
     client
   )
+  .disablePlugins(RevolverPlugin)
   .settings(
     publish / skip := true
   )
@@ -128,8 +135,6 @@ lazy val server = project
   )
   .settings(
     fork := true,
-    scalaJSProjects := Seq(client),
-    Assets / pipelineStages := Seq(scalaJSPipeline),
     libraryDependencies ++= commonDependencies ++ Seq(
       "io.github.iltotore" %% "iron-zio-json" % "2.5.0",
       "com.softwaremill.sttp.tapir" %% "tapir-zio" % tapirVersion,

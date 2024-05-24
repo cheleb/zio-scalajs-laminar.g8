@@ -5,7 +5,6 @@ import org.scalajs.dom
 
 //import dev.cheleb.scalamigen.{*, given}
 
-
 //import domain.*
 
 @main def hello: Unit =
@@ -15,8 +14,8 @@ import org.scalajs.dom
   val myApp =
     div(
       h1("Hello World")
-  //    child.text <-- personVar.signal.map(p => s"\$p"),
-  //    Form.renderVar(personVar)
+      //    child.text <-- personVar.signal.map(p => s"\$p"),
+      //    Form.renderVar(personVar)
     )
 
   val containerNode = dom.document.getElementById("app")
