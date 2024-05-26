@@ -158,6 +158,10 @@ val usedScalacOptions = Seq(
   "-Wunused:all"
 )
 
+$if(scalablytyped.truthy)$
+//
+// ScalablyTyped settings
+//
 val scalablyTypedPlugin = mode match {
   case "prod" => ScalablyTypedConverterPlugin
   case _      => ScalablyTypedConverterExternalNpmPlugin
@@ -177,6 +181,7 @@ val scalablyTypedNpmDependenciesSettings = mode match {
       baseDirectory.value / "sclaably-typed-external-npm"
     })
 }
+$endif$
 
 lazy val client = scalajsProject("client")
   .enablePlugins(scalablyTypedPlugin)
@@ -204,15 +209,18 @@ lazy val client = scalajsProject("client")
       "dev.zio"                       %%% "zio-prelude"       % "1.0.0-RC26",
       $if(scalariform.truthy)$
       // pull laminar 17.0.0
-      "dev.cheleb" %%% "laminar-form-derivation-ui5" % "0.12.0"
+      "dev.cheleb" %%% "laminar-form-derivation-ui5" % "0.12.0",
       $else$
-      "com.raquo" %%% "laminar" % laminarVersion
+      "com.raquo" %%% "laminar" % laminarVersion,
       $endif$
+      "io.frontroute"                 %%% "frontroute"        % "0.19.0"
     )
   )
+  $if(scalablytyped.truthy)$
   .settings(
     scalablyTypedNpmDependenciesSettings
   )
+  $endif$
   .dependsOn(sharedJs)
   .settings(
     publish / skip := true

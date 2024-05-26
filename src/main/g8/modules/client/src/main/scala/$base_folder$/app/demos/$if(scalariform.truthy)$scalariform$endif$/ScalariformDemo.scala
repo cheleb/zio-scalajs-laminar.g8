@@ -1,4 +1,4 @@
-package $package$.app
+package $package$.app.demos.scalariform
 
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom

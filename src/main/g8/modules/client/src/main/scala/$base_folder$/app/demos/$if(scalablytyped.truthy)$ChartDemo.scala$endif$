@@ -1,4 +1,4 @@
-package testvite
+package $package$.demos.scalably
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters.*

@@ -1,4 +1,4 @@
-package samples
+package $package$.app
 
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
@@ -7,7 +7,9 @@ import org.scalajs.dom
 
   val myApp = 
     div(
-      h1("Hello World")
+      Header(),
+      Router(),
+      Footer()
     )
 
   val containerNode = dom.document.getElementById("app")

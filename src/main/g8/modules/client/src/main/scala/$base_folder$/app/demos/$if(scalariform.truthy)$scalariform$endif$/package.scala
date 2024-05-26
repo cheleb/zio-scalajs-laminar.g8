@@ -1,4 +1,4 @@
-package $package$.app
+package $package$.app.demos.scalariform
 
 import dev.cheleb.scalamigen.ui5.UI5WidgetFactory
 import dev.cheleb.scalamigen.WidgetFactory
