@@ -6,7 +6,6 @@ import dev.cheleb.scalamigen.Defaultable
 
 import $package$.domain.*
 
-
 given f: WidgetFactory = UI5WidgetFactory
 
 given Defaultable[Cat] with
@@ -14,4 +13,3 @@ given Defaultable[Cat] with
 
 given Defaultable[Dog] with
   def default = Dog("", 1)
-

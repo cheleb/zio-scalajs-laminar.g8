@@ -6,8 +6,8 @@ import io.*
 import org.slf4j.LoggerFactory
 
 case class Config(
-    title: String = "",
-    resourceManaged: File = new File("target/")
+  title: String = "",
+  resourceManaged: File = new File("target/")
 )
 
 @main

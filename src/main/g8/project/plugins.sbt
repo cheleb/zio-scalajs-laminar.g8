@@ -18,3 +18,7 @@ addSbtPlugin("com.github.sbt"          % "sbt-unidoc"               % "0.5.0")
 addSbtPlugin("com.github.sbt"          % "sbt-ghpages"              % "0.8.0")
 addSbtPlugin("com.github.sbt"          % "sbt-site-paradox"         % "1.5.0")
 addSbtPlugin("io.spray"                % "sbt-revolver"             % "0.10.0")
+$if(scalablytyped.truthy)$
+
+addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
+$endif$

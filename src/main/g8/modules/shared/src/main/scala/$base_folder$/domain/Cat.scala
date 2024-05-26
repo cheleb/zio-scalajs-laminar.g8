@@ -1,6 +1,5 @@
 package $package$.domain
 
-
 import zio.json.JsonCodec
 import sttp.tapir.Schema
 

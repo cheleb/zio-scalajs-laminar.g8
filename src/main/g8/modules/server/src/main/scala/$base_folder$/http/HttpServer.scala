@@ -19,14 +19,14 @@ object HttpServer extends ZIOAppDefault {
 
   private val serrverProgram =
     for {
-      _ <- ZIO.succeed(println("Hello world"))
+      _         <- ZIO.succeed(println("Hello world"))
       endpoints <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
-        .fromServerEndpoints(endpoints, "$name$", "1.0.0")
+                       .fromServerEndpoints(endpoints, "$name$", "1.0.0")
       _ <- Server.serve(
-        ZioHttpInterpreter(ZioHttpServerOptions.default)
-          .toHttp(webJarRoutes :: endpoints ::: docEndpoints)
-      )
+             ZioHttpInterpreter(ZioHttpServerOptions.default)
+               .toHttp(webJarRoutes :: endpoints ::: docEndpoints)
+           )
     } yield ()
 
   override def run =

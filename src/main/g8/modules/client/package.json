@@ -15,12 +15,13 @@ $if(scalariform.truthy) $
     "@ui5/webcomponents": "1.24.0",
     "@ui5/webcomponents-fiori": "1.24.0",
     "@ui5/webcomponents-icons": "1.24.0",
-    "highlight.js": "^11.8.0",
 $endif$
-    "jsdom": "^9.9.0"
+    "chart.js": "2.9.4"
   },
   "devDependencies": {
     "@scala-js/vite-plugin-scalajs": "^1.0.0",
-    "vite": "^5.2.11"
+    "vite": "^5.2.11",
+    "typescript": "5.4.5",
+    "@types/chart.js": "2.9.29"
   }
 }

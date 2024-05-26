@@ -3,7 +3,7 @@ package samples
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
 
-@main def hello: Unit = 
+@main def main: Unit = 
 
   val myApp = 
     div(
