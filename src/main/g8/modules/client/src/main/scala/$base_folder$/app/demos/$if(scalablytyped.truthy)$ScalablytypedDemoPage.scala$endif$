@@ -1,4 +1,4 @@
-package $package$.demos.scalably
+package $package$.app.demos.scalablytyped
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters.*
@@ -7,7 +7,7 @@ import com.raquo.laminar.api.L.*
 
 import org.scalajs.dom
 
-object ChartDemo {
+object ScalablytypedDemoPage {
   final class DataItemID
 
   case class DataItem(id: DataItemID, label: String, value: Double)
@@ -20,11 +20,7 @@ object ChartDemo {
   val dataSignal = dataVar.signal
   val allValues  = dataSignal.map(_.map(_.value))
 
-  def main2(args: Array[String]): Unit =
-    // Laminar initialization
-    renderOnDomContentLoaded(dom.document.querySelector("#app"), appElement())
-
-  def appElement(): HtmlElement =
+  def apply(): HtmlElement =
     div(
       h1("Hello ScalaJS Polytechooo !"),
       renderDataTable(),

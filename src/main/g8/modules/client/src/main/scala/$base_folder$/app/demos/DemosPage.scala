@@ -2,14 +2,25 @@ package $package$.app.demos
 
 import com.raquo.laminar.api.L.*
 
-object DemosPage {
+object DemosPage:
   
-    def apply(): HtmlElement = {
-      div(
-        h1("Demos Page"),
-        p("This is a demo page."),
-        p("You can add more pages here."),
+  def apply(): HtmlElement =
+    div(
+      h1("Demos Page"),
+      ul(
+      $if(scalablytyped.truthy)$
+        demo("Scalablytyped", "/demos/scalablytyped"),
+      $endif$
+      $if(scalariform.truthy)$
+        demo("Scalariform", "/demos/scalariform")
       )
-    }
-
-}
+      $endif$
+    )
+  
+  private def demo(title: String, link: String) =
+    li(
+      a(
+        href := link,
+        title
+      )
+    )

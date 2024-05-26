@@ -3,9 +3,9 @@ package $package$.app
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
 
-@main def main: Unit = 
+@main def main: Unit =
 
-  val myApp = 
+  val myApp =
     div(
       Header(),
       Router(),
@@ -14,5 +14,3 @@ import org.scalajs.dom
 
   val containerNode = dom.document.getElementById("app")
   render(containerNode, myApp)
-
-

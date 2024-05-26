@@ -9,7 +9,7 @@ object Router:
   val externalUrlBus = EventBus[String]()
   def apply() =
     mainTag(
-      //onMountCallback(ctx => externalUrlBus.events.foreach(url => dom.window.location.href = url)(ctx.owner)),
+      // onMountCallback(ctx => externalUrlBus.events.foreach(url => dom.window.location.href = url)(ctx.owner)),
       routes(
         div(
           cls := "container-fluid",
@@ -17,37 +17,47 @@ object Router:
           (pathEnd | path("demos")) {
             DemosPage()
           },
-          // path("login") {
-          //   LoginPage()
-          // },
-          // path("signup") {
-          //   SignUpPage()
-          // },
-          // path("change-password") {
-          //   ChangePasswordPage()
-          // },
-          // path("forgot-password") {
-          //   ForgotPasswordPage()
-          // },
-          // path("recover-password") {
-          //   RecoverPasswordPage()
-          // },
-          // path("logout") {
-          //   LogoutPage()
-          // },
-          // path("profile") {
-          //   ProfilePage()
-          // },
-          // path("post") {
-          //   CreateCompanyPage()
-          // },
-          // path("company" / long) {
-          //   companyId =>
-          //     CompanyPage(companyId)
-          // },
-          // noneMatched {
-          //   NotFoundPage()
-          // }
+          $if(scalablytyped.truthy)$
+          path("demos" / "scalablytyped") {
+            scalablytyped.ScalablytypedDemoPage()
+          },
+          $endif$
+          $if(scalariform.truthy)$
+          path("demos" / "scalariform") {
+            scalariform.ScalariformDemoPage()
+          }
         )
+        $endif$
+        // path("login") {
+        //   LoginPage()
+        // },
+        // path("signup") {
+        //   SignUpPage()
+        // },
+        // path("change-password") {
+        //   ChangePasswordPage()
+        // },
+        // path("forgot-password") {
+        //   ForgotPasswordPage()
+        // },
+        // path("recover-password") {
+        //   RecoverPasswordPage()
+        // },
+        // path("logout") {
+        //   LogoutPage()
+        // },
+        // path("profile") {
+        //   ProfilePage()
+        // },
+        // path("post") {
+        //   CreateCompanyPage()
+        // },
+        // path("company" / long) {
+        //   companyId =>
+        //     CompanyPage(companyId)
+        // },
+        // noneMatched {
+        //   NotFoundPage()
+        // }
       )
     )
