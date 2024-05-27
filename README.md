@@ -2,9 +2,14 @@
 
 This is a g8 scafolding of a full Scala web application.
 
-* ScalaJS
-  * Laminar for the frontend.
-* ZIO for the backend 
+* [ScalaJS](https://www.scala-js.org) for the frontend.
+  * [Laminar](https://laminar.dev) as UI reactive framework.
+  * [Scallablytyped](https://scalablytyped.org) Use Typescript libraries with Scala.js
+  * [Tapir](https://tapir.softwaremill.com) for the Rest API (shared with the backend)
+* [ZIO](https://zio.dev) for the backend
+  * [Tapir](https://tapir.softwaremill.com) for the Rest API.
+  * [Quill](https://getquill.io) for the database access.
+  * [Flyway](https://flywaydb.org) for the database migrations.
 
 
 ## Usage
