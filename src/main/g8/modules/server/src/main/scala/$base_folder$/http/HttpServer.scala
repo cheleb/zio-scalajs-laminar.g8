@@ -9,6 +9,7 @@ import sttp.tapir.server.ziohttp.*
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import $package$.service.*
+import $package$.http.prometheus.*
 
 object HttpServer extends ZIOAppDefault {
 
@@ -17,6 +18,11 @@ object HttpServer extends ZIOAppDefault {
     "public"
   )
 
+  val serverOptions: ZioHttpServerOptions[Any] =
+    ZioHttpServerOptions.customiseInterceptors
+      .metricsInterceptor(metricsInterceptor)
+      .options
+
   private val serrverProgram =
     for {
       _         <- ZIO.succeed(println("Hello world"))
@@ -24,8 +30,8 @@ object HttpServer extends ZIOAppDefault {
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(endpoints, "$name$", "1.0.0")
       _ <- Server.serve(
-             ZioHttpInterpreter(ZioHttpServerOptions.default)
-               .toHttp(webJarRoutes :: endpoints ::: docEndpoints)
+             ZioHttpInterpreter(serverOptions)
+               .toHttp(metricsEndpoint :: webJarRoutes :: endpoints ::: docEndpoints)
            )
     } yield ()
 
