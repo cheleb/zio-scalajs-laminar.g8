@@ -4,7 +4,7 @@
         {
             "label": "demo",
             "runOptions": {
-                "runOn": "$if(runOnFolderOpen.truthysig)$folderOpen$else$default$endif$"
+                "runOn": "$if(runOnFolderOpen.truthy)$folderOpen$else$default$endif$"
             },
             "dependsOrder": "sequence",
             "dependsOn": [

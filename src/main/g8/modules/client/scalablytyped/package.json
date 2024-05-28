@@ -1,0 +1,13 @@
+{
+  "name": "scalablytyped",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "dependencies": {
+    "chart.js": "2.9.4"
+  },
+  "devDependencies": {
+    "typescript": "5.4.5",
+    "@types/chart.js": "2.9.29"
+  }
+}

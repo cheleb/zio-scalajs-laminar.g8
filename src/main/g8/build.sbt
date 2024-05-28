@@ -178,7 +178,7 @@ val scalablyTypedNpmDependenciesSettings = mode match {
   case _ =>
     Seq(externalNpm := {
       // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
-      baseDirectory.value / "sclaably-typed-external-npm"
+      baseDirectory.value / "scalablytyped"
     })
 }
 $endif$
