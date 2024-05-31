@@ -2,6 +2,7 @@ package $package$.app
 
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
+import frontroute.LinkHandler
 
 @main def main: Unit =
 
@@ -10,7 +11,7 @@ import org.scalajs.dom
       Header(),
       Router(),
       Footer()
-    )
+    ).amend(LinkHandler.bind) // For interbal links
 
   val containerNode = dom.document.getElementById("app")
   render(containerNode, myApp)

@@ -3,18 +3,21 @@ package $package$.app
 import com.raquo.laminar.api.L.*
 import frontroute.*
 
+import org.scalajs.dom
+
 import $package$.app.demos.*
 
 object Router:
-  val externalUrlBus = EventBus[String]()
+  private val externalUrlBus = EventBus[String]()
+  val writer                 = externalUrlBus.writer
   def apply() =
     mainTag(
-      // onMountCallback(ctx => externalUrlBus.events.foreach(url => dom.window.location.href = url)(ctx.owner)),
+      linkHandler,
       routes(
         div(
           cls := "container-fluid",
           // potentially children
-          (pathEnd | path("demos")) {
+          (pathEnd | path("public") | path("public" / "index.html")) {
             DemosPage()
           },
           $if(scalablytyped.truthy)$
@@ -25,39 +28,17 @@ object Router:
           $if(scalariform.truthy)$
           path("demos" / "scalariform") {
             scalariform.ScalariformDemoPage()
+          },
+          $endif$
+          noneMatched {
+            div("404 Not Found")
+          },
+          noneMatched {
+             div("404 Not Found")
           }
         )
-        $endif$
-        // path("login") {
-        //   LoginPage()
-        // },
-        // path("signup") {
-        //   SignUpPage()
-        // },
-        // path("change-password") {
-        //   ChangePasswordPage()
-        // },
-        // path("forgot-password") {
-        //   ForgotPasswordPage()
-        // },
-        // path("recover-password") {
-        //   RecoverPasswordPage()
-        // },
-        // path("logout") {
-        //   LogoutPage()
-        // },
-        // path("profile") {
-        //   ProfilePage()
-        // },
-        // path("post") {
-        //   CreateCompanyPage()
-        // },
-        // path("company" / long) {
-        //   companyId =>
-        //     CompanyPage(companyId)
-        // },
-        // noneMatched {
-        //   NotFoundPage()
-        // }
       )
     )
+  def linkHandler =
+    onMountCallback(ctx => externalUrlBus.events.foreach(url => dom.window.location.href = url)(ctx.owner))
+
