@@ -2,7 +2,7 @@ package $package$.app.demos
 
 import com.raquo.laminar.api.L.*
 
-import com.example.ziolaminardemo.app.Router
+import $package$.app.Router
 
 
 object DemosPage:
