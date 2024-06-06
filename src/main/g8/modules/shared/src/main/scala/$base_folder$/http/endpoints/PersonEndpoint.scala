@@ -18,7 +18,7 @@ trait PersonEndpoint extends BaseEndpoint {
         .description("Person to create")
         .example(Person("John", 30, Left(Cat("Fluffy"))))
     )
-    .out(jsonBody[Person])
+    .out(jsonBody[User])
     .description("Create person")
 
 }

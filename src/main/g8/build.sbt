@@ -3,6 +3,8 @@ import org.scalajs.linker.interface.ModuleSplitStyle
 
 val scala3 = "$scala_version$"
 
+name  := "$name$"
+
 val tapirVersion = "$tapir_version$"
 
 val laminarVersion = "$laminar_version$"
@@ -107,7 +109,7 @@ val staticGenerationSettings =
             Seq(
               "samples.BuildIndex",
               "--title",
-              s""""$name$ v \${version.value}"""",
+              s""""\${name.value} v \${version.value}"""",
               "--resource-managed",
               rootFolder
             ).mkString(" ", " ", "")
@@ -119,11 +121,6 @@ val staticGenerationSettings =
   else
     Seq()
 
-val commonDependencies = Seq(
-  "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
-  "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
-  "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp
-)
 
 lazy val server = project
   .in(file("modules/server"))
@@ -133,7 +130,7 @@ lazy val server = project
   )
   .settings(
     fork := true,
-    libraryDependencies ++= commonDependencies ++ Seq(
+    libraryDependencies ++= Seq(
       "io.github.iltotore"          %% "iron-zio-json"            % "2.5.0",
       "com.softwaremill.sttp.tapir" %% "tapir-zio"                % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % tapirVersion,
@@ -231,7 +228,12 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .disablePlugins(RevolverPlugin)
   .in(file("modules/shared"))
   .settings(
-    libraryDependencies ++= commonDependencies
+    libraryDependencies ++= Seq(
+     "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
+     "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
+     "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp,
+     "io.scalaland"                  %%% "chimney"           % "1.0.0"
+    )
   )
   .settings(
     publish / skip := true

@@ -5,6 +5,7 @@ import com.raquo.laminar.api.L.*
 import dev.cheleb.scalamigen.{*, given}
 
 import $package$.domain.*
+import $package$.core.ZJS.*
 
 object ScalariformDemoPage:
   def apply() =
@@ -12,5 +13,13 @@ object ScalariformDemoPage:
     div(
       h1("Hello World"),
       child.text <-- personVar.signal.map(p => s"\$p"),
-      Form.renderVar(personVar)
+      Form.renderVar(personVar),
+      hr(),
+      button(
+        "Post",
+        onClick --> { _ =>
+          println(personVar.now())
+          useBackend(_.person.createEndpoint(personVar.now())).runJs
+        }
+      )
     )
