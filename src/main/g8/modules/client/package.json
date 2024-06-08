@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && mv dist ../../docs/_assets/demo",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "license": "MIT",

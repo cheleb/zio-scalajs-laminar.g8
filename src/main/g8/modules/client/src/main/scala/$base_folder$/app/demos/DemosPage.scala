@@ -4,7 +4,6 @@ import com.raquo.laminar.api.L.*
 
 import $package$.app.Router
 
-
 object DemosPage:
   
   def apply(): HtmlElement =

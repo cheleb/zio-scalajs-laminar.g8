@@ -3,7 +3,7 @@ import org.scalajs.linker.interface.ModuleSplitStyle
 
 val scala3 = "$scala_version$"
 
-name  := "$name$"
+name := "$name$"
 
 val tapirVersion = "$tapir_version$"
 
@@ -121,7 +121,6 @@ val staticGenerationSettings =
   else
     Seq()
 
-
 lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(serverPlugins: _*)
@@ -164,19 +163,28 @@ val scalablyTypedPlugin = mode match {
   case _      => ScalablyTypedConverterExternalNpmPlugin
 }
 
-val scalablyTypedNpmDependenciesSettings = mode match {
+val scalaJsSettings = mode match {
   case "prod" =>
     Seq(
+    $if(scalablytyped.truthy)$
       Compile / npmDependencies ++= Seq(
         "chart.js"        -> "2.9.4",
         "@types/chart.js" -> "2.9.29"
-      )
+      ),
+    $endif$
+      webpack / version := "5.91.0",
+      scalaJSStage in Global := FullOptStage,
+      webpackBundlingMode    := BundlingMode.LibraryAndApplication()
     )
   case _ =>
+    $if(scalablytyped.truthy)$
     Seq(externalNpm := {
       // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
       baseDirectory.value / "scalablytyped"
     })
+    $else$
+    Seq()
+    $endif$
 }
 $endif$
 
@@ -187,7 +195,12 @@ lazy val client = scalajsProject("client")
     scalaJSLinkerConfig ~= { config =>
       mode match {
         case "prod" =>
-          config.withModuleKind(scalaJSModule)
+          config
+            .withModuleKind(scalaJSModule)
+            .withMinify(true)
+            .withOptimizer(true)
+            .withClosureCompiler(true)
+
         case _ =>
           config
             .withModuleKind(scalaJSModule)
@@ -213,11 +226,9 @@ lazy val client = scalajsProject("client")
       "io.frontroute" %%% "frontroute"                  % "0.19.0"
     )
   )
-  $if(scalablytyped.truthy)$
   .settings(
-    scalablyTypedNpmDependenciesSettings
+    scalaJsSettings
   )
-  $endif$
   .dependsOn(sharedJs)
   .settings(
     publish / skip := true
@@ -229,10 +240,10 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .in(file("modules/shared"))
   .settings(
     libraryDependencies ++= Seq(
-     "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
-     "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
-     "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp,
-     "io.scalaland"                  %%% "chimney"           % "1.0.0"
+      "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
+      "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp,
+      "io.scalaland"                 %%% "chimney"           % "1.1.0"
     )
   )
   .settings(
