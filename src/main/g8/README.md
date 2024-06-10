@@ -16,7 +16,7 @@ Decent vesions of JDK, sbt and Node.js are required.
 To get started, run the following command:
 
 ```bash
-DEV=prod NODE_OPTIONS="--openssl-legacy-provider" sbt server/run
+MOD=prod NODE_OPTIONS="--openssl-legacy-provider" sbt server/run
 ```
 
 http://localhost:8080/public/index.html
