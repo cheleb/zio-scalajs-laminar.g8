@@ -5,7 +5,7 @@ import zio.ZIO
 import zio.ZLayer
 
 import $package$.config.*
-import $package$.http.endpoints.*
+
 import sttp.capabilities.zio.ZioStreams
 import sttp.client3.*
 import sttp.client3.impl.zio.FetchZioBackend
@@ -19,7 +19,6 @@ case class RestrictedEndpointException(message: String) extends RuntimeException
  * A client to the backend, extending the endpoints as methods.
  */
 trait BackendClient {
-  val person = new PersonEndpoint {}
 
   /**
    * Call an endpoint with a payload.

@@ -6,9 +6,9 @@ import sttp.tapir.ztapir.*
 import $package$.http.endpoints.PersonEndpoint
 import $package$.service.PersonService
 
-class PersonController private (personService: PersonService) extends BaseController with PersonEndpoint {
+class PersonController private (personService: PersonService) extends BaseController {
 
-  val create: ServerEndpoint[Any, Task] = createEndpoint
+  val create: ServerEndpoint[Any, Task] = PersonEndpoint.createEndpoint
     .zServerLogic(p => personService.register(p))
 
   val routes: List[ServerEndpoint[Any, Task]] =

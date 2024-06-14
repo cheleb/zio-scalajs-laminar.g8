@@ -7,8 +7,9 @@ import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 import $package$.domain.*
 
-trait PersonEndpoint extends BaseEndpoint {
-  val createEndpoint = baseEndpoint
+object PersonEndpoint extends BaseEndpoint:
+
+  val createEndpoint: Endpoint[Unit, Person, Throwable, User, Any] = baseEndpoint
     .tag("person")
     .name("person")
     .post
@@ -20,5 +21,3 @@ trait PersonEndpoint extends BaseEndpoint {
     )
     .out(jsonBody[User])
     .description("Create person")
-
-}
