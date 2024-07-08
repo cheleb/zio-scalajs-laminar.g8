@@ -27,7 +27,7 @@ object HttpServer extends ZIOAppDefault {
       )
       .options
 
-  private val serrverProgram =
+  private val serverProgram =
     for {
       _         <- ZIO.succeed(println("Hello world"))
       endpoints <- HttpApi.endpointsZIO
@@ -40,7 +40,7 @@ object HttpServer extends ZIOAppDefault {
     } yield ()
 
   override def run =
-    serrverProgram
+    serverProgram
       .provide(
         Server.default,
         // Service layers
