@@ -2,6 +2,12 @@ import java.nio.charset.StandardCharsets
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 import Dependencies._
+//
+// Will handle different build modes:
+// - prod: production mode
+// - demo: demo mode (default)
+// - dev:  development mode
+//
 import ServerSettings._
 
 val scala3 = "$scala_version$"
@@ -19,12 +25,19 @@ inThisBuild(
   )
 )
 
+//
+// This is static generation settings to be used in server project
+// Illustrate how to use the generator project to generate static files with twirl
+//
 lazy val generator = project
   .in(file("build/generator"))
   .enablePlugins(SbtTwirl)
   .disablePlugins(RevolverPlugin)
   .settings(staticFilesGeneratorDependencies)
 
+// Aggregate root project
+// This is the root project that aggregates all other projects
+// It is used to run tasks on all projects at once.
 lazy val root = project
   .in(file("."))
   .aggregate(
@@ -39,6 +52,10 @@ lazy val root = project
     publish / skip := true
   )
 
+//
+// Server project
+// It depends on sharedJvm project, a project that contains shared code between server and client
+//
 lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(serverPlugins: _*)
@@ -65,6 +82,10 @@ val usedScalacOptions = Seq(
   "-Wunused:all"
 )
 
+//
+// Client project
+// It depends on sharedJs project, a project that contains shared code between server and client.
+// 
 lazy val client = scalajsProject("client")
   .enablePlugins(scalablyTypedPlugin)
   .settings(
@@ -106,6 +127,10 @@ lazy val client = scalajsProject("client")
     publish / skip := true
   )
 
+//
+// Shared project  
+// It is a cross project that contains shared code between server and client
+//
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .disablePlugins(RevolverPlugin)
@@ -144,6 +169,10 @@ def scalajsProject(projectId: String): Project =
       )
     )
 
+//
+// This is a global setting that will generate a build-env.sh file in the target directory.    
+// This file will contain the SCALA_VERSION variable that can be used in the build process
+// 
 Global / onLoad := {
   val scalaVersionValue = (client / scalaVersion).value
   val outputFile =

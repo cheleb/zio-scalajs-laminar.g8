@@ -14,7 +14,7 @@ import scalajsbundler.sbtplugin._
 import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 
 object ServerSettings {
-  //
+//
 // Define the build mode:
 // - prod: production mode
 //         optimized, CommonJSModule
