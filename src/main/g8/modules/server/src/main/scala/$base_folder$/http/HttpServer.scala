@@ -14,6 +14,8 @@ import $package$.http.prometheus.*
 $if(db.truthy)$
 import $package$.services.FlywayService
 import $package$.services.FlywayServiceLive
+import $package$.repositories.UserRepositoryLive
+import $package$.repositories.Repository
 $endif$
 
 object HttpServer extends ZIOAppDefault {
@@ -66,9 +68,12 @@ object HttpServer extends ZIOAppDefault {
       .provide(
         Server.default,
         // Service layers
+        PersonServiceLive.layer,
         $if(db.truthy)$
         FlywayServiceLive.configuredLayer,
+        // Repository layers
+        UserRepositoryLive.layer,
+        Repository.dataLayer
         $endif$
-        PersonServiceLive.layer
       )
 }

@@ -5,11 +5,14 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
   val Versions = new {
     val chimney    = "1.3.0"
+    $if(db.truthy)$
     val flywaydb   = "10.14.0"
+    $endif$
     val iron       = "2.6.0"
     val javaMail   = "1.6.2"
     val osLib      = "0.10.2"
     val postgresql = "42.7.3"
+    $if(quill.truthy)$val quill      = "4.8.5"$endif$
     val scopt      = "4.1.0"
     val slf4j      = "2.0.13"
     val stripe     = "25.10.0"
@@ -35,6 +38,11 @@ $if(db.truthy)$
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
 $endif$
+$if(quill.truthy)$
+  private val quillDependencies = Seq(
+    "io.getquill" %% "quill-jdbc-zio" % Versions.quill
+  )
+$endif$
 
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(
@@ -46,8 +54,8 @@ $endif$
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
       configDependencies$if(db.truthy)$ ++
-      databaseDependencies$endif$
-
+      databaseDependencies$endif$$if(quill.truthy)$ ++
+      quillDependencies$endif$
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(

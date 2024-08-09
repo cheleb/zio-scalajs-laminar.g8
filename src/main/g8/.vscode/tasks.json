@@ -27,10 +27,28 @@
             },
             "group": "build"
         },
+        $if(db.truthy)$
+        {
+            "label": "docker",
+            "icon": {
+                "id": "database"
+            },
+            "type": "shell",
+            "command": "docker-compose up",
+            "presentation": {
+                "panel": "dedicated",
+                "group": "back"
+            },
+            "group": "build"
+        },
+        $endif$
         {
             "label": "runDemo",
             "dependsOrder": "parallel",
             "dependsOn": [
+                $if(db.truthy)$
+                "docker",
+                $endif$
                 "serverRun",
                 "fastLink",
                 "npmDev"
@@ -42,31 +60,40 @@
         },
         {
             "label": "fastLink",
+            "icon": {
+                "id": "browser"
+            },
             "type": "shell",
             "command": "./scripts/fastLink.sh",
             "presentation": {
-                "panel": "dedicated",
-                "group": "runDevCmd"
+                "panel": "shared",
+                "group": "front"
             },
             "group": "build"
         },
         {
             "label": "serverRun",
+            "icon": {
+                "id": "server-process"
+            },
             "type": "shell",
             "command": "./scripts/serverRun.sh",
             "presentation": {
-                "panel": "dedicated",
-                "group": "runDevCmd"
+                "panel": "shared",
+                "group": "back"
             },
             "group": "build"
         },
         {
             "label": "npmDev",
+            "icon": {
+                "id": "package"
+            },
             "type": "shell",
             "command": "./scripts/npmDev.sh",
             "presentation": {
-                "panel": "dedicated",
-                "group": "runDevCmd"
+                "panel": "shared",
+                "group": "front"
             },
             "group": "build"
         }
