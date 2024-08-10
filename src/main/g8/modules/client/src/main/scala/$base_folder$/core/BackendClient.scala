@@ -1,8 +1,6 @@
 package $package$.core
 
-import zio.Task
-import zio.ZIO
-import zio.ZLayer
+import zio.*
 
 import $package$.config.*
 
@@ -108,9 +106,9 @@ private class BackendClientLive(
 }
 
 object BackendClientLive {
-  val layer = ZLayer.fromFunction(BackendClientLive(_, _, _))
+  val layer = ZLayer.derive[BackendClientLive]
 
-  val configuredLayer = {
+  val configuredLayer: ULayer[BackendClient] = {
     val backend: SttpBackend[Task, ZioStreams] = FetchZioBackend()
     val interpreter                            = SttpClientInterpreter()
     val config                                 = BackendClientConfig(Some(uri"\${Constants.backendBaseURL}"))
