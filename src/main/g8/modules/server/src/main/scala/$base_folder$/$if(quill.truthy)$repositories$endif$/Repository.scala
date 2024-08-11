@@ -5,6 +5,7 @@ import zio.*
 import io.getquill.SnakeCase
 import io.getquill.jdbczio.Quill
 import io.getquill.jdbczio.Quill.Postgres
+import javax.sql.DataSource
 
 object Repository {
 
