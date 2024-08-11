@@ -17,7 +17,7 @@ object PersonEndpoint extends BaseEndpoint:
     .in(
       jsonBody[Person]
         .description("Person to create")
-        .example(Person("John", 30, Left(Cat("Fluffy"))))
+        .example(Person("John", "john.doe@foo.bar", 42, Left(Cat("Fluffy"))))
     )
     .out(jsonBody[User])
     .description("Create person")

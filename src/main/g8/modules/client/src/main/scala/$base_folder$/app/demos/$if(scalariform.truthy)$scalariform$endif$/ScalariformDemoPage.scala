@@ -13,7 +13,7 @@ import $package$.http.endpoints.PersonEndpoint
 
 object ScalariformDemoPage:
   def apply() =
-    val personVar = Var(Person("Alice", 42, Left(Cat("Fluffy"))))
+    val personVar = Var(Person("John", "john.does@foo.bar", 42, Left(Cat("Fluffy"))))
     val userBus   = EventBus[User]()
 
     div(
@@ -50,8 +50,9 @@ object ScalariformDemoPage:
   def renderUser(user: User) =
     div(
       h2("User"),
+      div(s"Id: \${user.id}"),
       div(s"Name: \${user.name}"),
       div(s"Age: \${user.age}"),
-      div(s"Pet: \${user.pet}"),
+//      div(s"Pet: \${user.pet}"),
       div(s"Creation Date: \${user.creationDate}")
     )

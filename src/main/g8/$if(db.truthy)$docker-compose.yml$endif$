@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+    environment:
+      - "POSTGRES_USER=docker"
+      - "POSTGRES_PASSWORD=docker"
+    ports:
+      - "5432:5432"
+    command: ["postgres", "-c", "log_statement=all"]
