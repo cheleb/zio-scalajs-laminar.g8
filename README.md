@@ -24,8 +24,8 @@ See following instructions, generated in the README of your newly shining projec
   * [Tapir](https://tapir.softwaremill.com) for the Rest API (shared with the backend)
 * [ZIO](https://zio.dev) for the backend
   * [Tapir](https://tapir.softwaremill.com) for the Rest API.
-  * [Quill](https://getquill.io) for the database access. TBD
-  * [Flyway](https://flywaydb.org) for the database migrations. TBD
+  * [Quill](https://getquill.io) for the database access.
+  * [Flyway](https://flywaydb.org) for the database migrations.
 
 
 ## Credits
