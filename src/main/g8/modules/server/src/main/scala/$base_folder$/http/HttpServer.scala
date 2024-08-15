@@ -39,7 +39,7 @@ object HttpServer extends ZIOAppDefault {
          }
   } yield ()
 
-  private val $if(db.truthy)$server$else$serverProgram$endif$ =
+  private val server =
     for {
       _            <- Console.printLine("Starting server...")
       apiEndpoints <- HttpApi.endpointsZIO

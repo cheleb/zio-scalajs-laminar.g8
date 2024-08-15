@@ -5,14 +5,12 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
   val Versions = new {
     val chimney    = "1.3.0"
-    $if(db.truthy)$
     val flywaydb   = "10.14.0"
-    $endif$
     val iron       = "2.6.0"
     val javaMail   = "1.6.2"
     val osLib      = "0.10.2"
     val postgresql = "42.7.3"
-    $if(quill.truthy)$val quill      = "4.8.5"$endif$
+    val quill      = "4.8.5"
     val scopt      = "4.1.0"
     val slf4j      = "2.0.13"
     val stripe     = "25.10.0"
@@ -31,18 +29,15 @@ object Dependencies {
     "dev.zio" %% "zio-config-typesafe" % Versions.zioConfig
   )
 
-$if(db.truthy)$
   private val databaseDependencies = Seq(
     "org.flywaydb"   % "flyway-core"                % Versions.flywaydb,
     "org.flywaydb"   % "flyway-database-postgresql" % Versions.flywaydb,
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
-$endif$
-$if(quill.truthy)$
+
   private val quillDependencies = Seq(
     "io.getquill" %% "quill-jdbc-zio" % Versions.quill
   )
-$endif$
 
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(
@@ -53,9 +48,9 @@ $endif$
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
-      configDependencies$if(db.truthy)$ ++
-      databaseDependencies$endif$$if(quill.truthy)$ ++
-      quillDependencies$endif$
+      configDependencies ++
+      databaseDependencies ++
+      quillDependencies
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(

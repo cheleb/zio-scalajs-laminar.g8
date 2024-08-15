@@ -27,7 +27,6 @@
             },
             "group": "build"
         },
-        $if(db.truthy)$
         {
             "label": "docker",
             "icon": {
@@ -41,14 +40,11 @@
             },
             "group": "build"
         },
-        $endif$
         {
             "label": "runDemo",
             "dependsOrder": "parallel",
             "dependsOn": [
-                $if(db.truthy)$
                 "docker",
-                $endif$
                 "serverRun",
                 "fastLink",
                 "npmDev"
