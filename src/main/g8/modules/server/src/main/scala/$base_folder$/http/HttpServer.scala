@@ -11,12 +11,10 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 import $package$.service.*
 import $package$.http.prometheus.*
-$if(db.truthy)$
 import $package$.services.FlywayService
 import $package$.services.FlywayServiceLive
 import $package$.repositories.UserRepositoryLive
 import $package$.repositories.Repository
-$endif$
 
 object HttpServer extends ZIOAppDefault {
 
@@ -33,7 +31,6 @@ object HttpServer extends ZIOAppDefault {
       )
       .options
 
-  $if(db.truthy)$
   val runMigrations = for {
     flyway <- ZIO.service[FlywayService]
     _ <- flyway.runMigrations().catchSome { case e =>
@@ -41,39 +38,34 @@ object HttpServer extends ZIOAppDefault {
              *> flyway.runRepair() *> flyway.runMigrations()
          }
   } yield ()
-  $endif$
 
   private val $if(db.truthy)$server$else$serverProgram$endif$ =
     for {
-      _         <- ZIO.succeed(println("Hello world"))
-      endpoints <- HttpApi.endpointsZIO
+      _            <- Console.printLine("Starting server...")
+      apiEndpoints <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
-                       .fromServerEndpoints(endpoints, "zio-laminar-demo", "1.0.0")
+                       .fromServerEndpoints(apiEndpoints, "zio-laminar-demo", "1.0.0")
       _ <- Server.serve(
              ZioHttpInterpreter(serverOptions)
-               .toHttp(metricsEndpoint :: webJarRoutes :: endpoints ::: docEndpoints)
+               .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
            )
     } yield ()
 
-  $if(db.truthy)$
   private val program =
     for {
       _ <- runMigrations
       _ <- server
     } yield ()
-  $endif$
 
   override def run =
-    $if(db.truthy)$program$else$serverProgram$endif$
+    program
       .provide(
         Server.default,
         // Service layers
         PersonServiceLive.layer,
-        $if(db.truthy)$
         FlywayServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
         Repository.dataLayer
-        $endif$
       )
 }

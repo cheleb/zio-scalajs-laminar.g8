@@ -7,30 +7,27 @@ import java.time.Instant
 import java.time.ZonedDateTime
 
 import $package$.domain.*
+import $package$.domain.errors.*
 
-$if(quill.truthy)$
 import $package$.repositories.UserRepository
-$endif$
 
 trait PersonService {
   def register(person: Person): Task[User]
 }
 
-class PersonServiceLive private $if(quill.truthy)$(userRepository: UserRepository)$endif$ extends PersonService {
+class PersonServiceLive private (userRepository: UserRepository) extends PersonService {
   def register(person: Person): Task[User] =
-    $if(quill.truthy)$
-    userRepository.create(
-      User(
-        id = None,
-        name = person.name,
-        email = person.email,
-        age = person.age,
-        creationDate = ZonedDateTime.now()
+    if person.age < 18 then ZIO.fail(TooYoungException(person.age))
+    else
+      userRepository.create(
+        User(
+          id = None,
+          name = person.name,
+          email = person.email,
+          age = person.age,
+          creationDate = ZonedDateTime.now()
+        )
       )
-    )
-    $else$
-    ZIO.succeed(person.into[User].withFieldComputed(_.creationDate, _ => ZonedDateTime.now()).transform)
-    $endif$
 }
 
 object PersonServiceLive {
