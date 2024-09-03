@@ -6,7 +6,7 @@ import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 import $package$.domain.*
-import com.example.ziolaminardemo.login.LoginPassword
+import $package$.login.LoginPassword
 
 object PersonEndpoint extends BaseEndpoint:
 
