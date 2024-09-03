@@ -47,11 +47,6 @@ $endif$
   private val jwtDependencies = Seq(
     "com.auth0" % "java-jwt" % "4.4.0"
   )
-  $if(quill.truthy)$
-  private val quillDependencies = Seq(
-    "io.getquill" %% "quill-jdbc-zio" % Versions.quill
-  )
-  $endif$
 
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(

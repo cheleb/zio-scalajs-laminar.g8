@@ -12,7 +12,7 @@ import dev.cheleb.ziolaminartapir.ZJS.*
 
 import zio.prelude.*
 
-import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
+import $package$.http.endpoints.PersonEndpoint
 
 //given Session[UserToken] = SessionLive[UserToken]
 

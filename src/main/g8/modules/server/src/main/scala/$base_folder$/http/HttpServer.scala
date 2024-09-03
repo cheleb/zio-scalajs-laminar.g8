@@ -68,7 +68,6 @@ object HttpServer extends ZIOAppDefault {
       .provide(
         Server.default,
         // Service layers
-        PersonServiceLive.layer,
         $if(db.truthy)$
         PersonServiceLive.layer,
         FlywayServiceLive.configuredLayer,
