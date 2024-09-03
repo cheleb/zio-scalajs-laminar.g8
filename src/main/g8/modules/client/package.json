@@ -11,11 +11,9 @@
   },
   "license": "MIT",
   "dependencies": {
-$if(scalariform.truthy) $
-    "@ui5/webcomponents": "1.24.0",
-    "@ui5/webcomponents-fiori": "1.24.0",
-    "@ui5/webcomponents-icons": "1.24.0",
-$endif$
+    "@ui5/webcomponents": "2.0.1",
+    "@ui5/webcomponents-fiori": "2.0.1",
+    "@ui5/webcomponents-icons": "2.0.1",
     "chart.js": "2.9.4"
   },
   "devDependencies": {

@@ -45,13 +45,13 @@ object HttpServer extends ZIOAppDefault {
 
   private val $if(db.truthy)$server$else$serverProgram$endif$ =
     for {
-      _         <- ZIO.succeed(println("Hello world"))
-      endpoints <- HttpApi.endpointsZIO
+      _            <- Console.printLine("Starting server...")
+      apiEndpoints <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
-                       .fromServerEndpoints(endpoints, "zio-laminar-demo", "1.0.0")
+                       .fromServerEndpoints(apiEndpoints, "zio-laminar-demo", "1.0.0")
       _ <- Server.serve(
              ZioHttpInterpreter(serverOptions)
-               .toHttp(metricsEndpoint :: webJarRoutes :: endpoints ::: docEndpoints)
+               .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
            )
     } yield ()
 
@@ -70,7 +70,9 @@ object HttpServer extends ZIOAppDefault {
         // Service layers
         PersonServiceLive.layer,
         $if(db.truthy)$
+        PersonServiceLive.layer,
         FlywayServiceLive.configuredLayer,
+        JWTServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
         Repository.dataLayer

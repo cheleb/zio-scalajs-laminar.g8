@@ -13,6 +13,9 @@ object HttpError {
     HttpError(tuple._1, tuple._2, new RuntimeException(tuple._2))
   def encode(error: Throwable) =
     error match
-      case UnauthorizedException(msg) => (StatusCode.Unauthorized, msg)
-      case _                          => (StatusCode.InternalServerError, error.getMessage())
+      case UnauthorizedException(msg)    => (StatusCode.Unauthorized, msg)
+      case TooYoungException(_)          => (StatusCode.BadRequest, error.getMessage())
+      case InvalidCredentialsException() => (StatusCode.Unauthorized, error.getMessage())
+      case UserAlreadyExistsException()  => (StatusCode.Conflict, error.getMessage())
+      case _                             => (StatusCode.InternalServerError, error.getMessage())
 }

@@ -22,7 +22,7 @@ object Dependencies {
     val zioConfig  = "4.0.2"
     val zioJson    = "0.7.0"
     val zioLogging = "2.2.4"
-    val zioPrelude = "1.0.0-RC27"
+    val zioPrelude = "1.0.0-RC30"
   }
 
   private val configDependencies = Seq(
@@ -44,6 +44,15 @@ $if(quill.truthy)$
   )
 $endif$
 
+  private val jwtDependencies = Seq(
+    "com.auth0" % "java-jwt" % "4.4.0"
+  )
+  $if(quill.truthy)$
+  private val quillDependencies = Seq(
+    "io.getquill" %% "quill-jdbc-zio" % Versions.quill
+  )
+  $endif$
+
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(
       "io.github.iltotore"          %% "iron-zio-json"            % Versions.iron,
@@ -51,11 +60,14 @@ $endif$
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
+      "dev.cheleb"                  %% "zio-jwt-server"           % "0.0.1-local",
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
       configDependencies$if(db.truthy)$ ++
       databaseDependencies$endif$$if(quill.truthy)$ ++
-      quillDependencies$endif$
+      quillDependencies$endif$ ++
+      jwtDependencies
+
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
@@ -64,7 +76,8 @@ $endif$
       "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
       "dev.zio"                       %%% "zio-json"          % Versions.zioJson,
       "dev.zio"                       %%% "zio-prelude"       % Versions.zioPrelude,
-      "io.scalaland"                  %%% "chimney"           % Versions.chimney
+      "io.scalaland"                  %%% "chimney"           % Versions.chimney,
+      "dev.cheleb"                    %%% "zio-jwt"           % "0.0.1-local"
     )
 
   val staticFilesGeneratorDependencies =
