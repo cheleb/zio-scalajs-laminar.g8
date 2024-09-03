@@ -5,12 +5,14 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
   val Versions = new {
     val chimney    = "1.3.0"
+    $if(db.truthy)$
     val flywaydb   = "10.14.0"
+    $endif$
     val iron       = "2.6.0"
     val javaMail   = "1.6.2"
     val osLib      = "0.10.2"
     val postgresql = "42.7.3"
-    val quill      = "4.8.5"
+    $if(quill.truthy)$val quill      = "4.8.5"$endif$
     val scopt      = "4.1.0"
     val slf4j      = "2.0.13"
     val stripe     = "25.10.0"
@@ -20,7 +22,7 @@ object Dependencies {
     val zioConfig  = "4.0.2"
     val zioJson    = "0.7.0"
     val zioLogging = "2.2.4"
-    val zioPrelude = "1.0.0-RC27"
+    val zioPrelude = "1.0.0-RC30"
   }
 
   private val configDependencies = Seq(
@@ -29,14 +31,21 @@ object Dependencies {
     "dev.zio" %% "zio-config-typesafe" % Versions.zioConfig
   )
 
+$if(db.truthy)$
   private val databaseDependencies = Seq(
     "org.flywaydb"   % "flyway-core"                % Versions.flywaydb,
     "org.flywaydb"   % "flyway-database-postgresql" % Versions.flywaydb,
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
-
+$endif$
+$if(quill.truthy)$
   private val quillDependencies = Seq(
     "io.getquill" %% "quill-jdbc-zio" % Versions.quill
+  )
+$endif$
+
+  private val jwtDependencies = Seq(
+    "com.auth0" % "java-jwt" % "4.4.0"
   )
 
   val serverLibraryDependencies =
@@ -46,11 +55,14 @@ object Dependencies {
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
+      "dev.cheleb"                  %% "zio-jwt-server"           % "0.0.1-local",
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
-      configDependencies ++
-      databaseDependencies ++
-      quillDependencies
+      configDependencies$if(db.truthy)$ ++
+      databaseDependencies$endif$$if(quill.truthy)$ ++
+      quillDependencies$endif$ ++
+      jwtDependencies
+
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
@@ -59,7 +71,8 @@ object Dependencies {
       "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
       "dev.zio"                       %%% "zio-json"          % Versions.zioJson,
       "dev.zio"                       %%% "zio-prelude"       % Versions.zioPrelude,
-      "io.scalaland"                  %%% "chimney"           % Versions.chimney
+      "io.scalaland"                  %%% "chimney"           % Versions.chimney,
+      "dev.cheleb"                    %%% "zio-jwt"           % "0.0.1-local"
     )
 
   val staticFilesGeneratorDependencies =

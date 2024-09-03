@@ -6,6 +6,7 @@ import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 import $package$.domain.*
+import $package$.login.LoginPassword
 
 object PersonEndpoint extends BaseEndpoint:
 
@@ -17,7 +18,29 @@ object PersonEndpoint extends BaseEndpoint:
     .in(
       jsonBody[Person]
         .description("Person to create")
-        .example(Person("John", "john.doe@foo.bar", 42, Left(Cat("Fluffy"))))
+        .example(
+          Person("John", "john.doe@foo.bar", Password("notsecured"), Password("notsecured"), 42, Left(Cat("Fluffy")))
+        )
     )
     .out(jsonBody[User])
     .description("Create person")
+
+  val login: Endpoint[Unit, LoginPassword, Throwable, UserToken, Any] = baseEndpoint
+    .tag("person")
+    .name("login")
+    .post
+    .in("login")
+    .in(
+      jsonBody[LoginPassword]
+    )
+    .out(jsonBody[UserToken])
+    .description("Login")
+
+  val profile: Endpoint[String, Unit, Throwable, User, Any] = baseSecuredEndpoint
+    .tag("person")
+    .name("profile")
+    .get
+    .in("profile")
+//    .in(query[Boolean]("details"))
+    .out(jsonBody[User])
+    .description("Get profile")

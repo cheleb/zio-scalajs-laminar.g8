@@ -30,8 +30,8 @@ object Router:
             scalariform.ScalariformDemoPage()
           },
           $endif$
-          noneMatched {
-            div("404 Not Found")
+          path("profile") {
+            ProfilePage()
           },
           noneMatched {
             div("404 Not Found")

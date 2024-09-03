@@ -5,7 +5,7 @@ import sttp.tapir.server.ServerEndpoint
 
 import controllers.*
 
-import $package$.service.PersonService
+import $package$.service.*
 
 //https://tapir.softwaremill.com/en/latest/server/logic.html
 object HttpApi {
@@ -19,5 +19,6 @@ object HttpApi {
     personController <- PersonController.makeZIO
   } yield List(healthController, personController)
 
-  val endpointsZIO: URIO[PersonService, List[ServerEndpoint[Any, Task]]] = makeControllers.map(gatherRoutes)
+  val endpointsZIO: URIO[PersonService & JWTService, List[ServerEndpoint[Any, Task]]] =
+    makeControllers.map(gatherRoutes)
 }

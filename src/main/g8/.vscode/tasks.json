@@ -27,6 +27,34 @@
             },
             "group": "build"
         },
+        $if(db.truthy)$
+        {
+            "label": "docker",
+            "icon": {
+                "id": "database"
+            },
+            "type": "shell",
+            "command": "docker-compose up",
+            "presentation": {
+                "panel": "dedicated",
+                "group": "back"
+            },
+            "group": "build"
+        },
+        $endif$
+        {
+            "label": "docker",
+            "icon": {
+                "id": "database"
+            },
+            "type": "shell",
+            "command": "docker-compose up",
+            "presentation": {
+                "panel": "dedicated",
+                "group": "back"
+            },
+            "group": "build"
+        },
         {
             "label": "docker",
             "icon": {
@@ -44,7 +72,9 @@
             "label": "runDemo",
             "dependsOrder": "parallel",
             "dependsOn": [
+                $if(db.truthy)$
                 "docker",
+                $endif$
                 "serverRun",
                 "fastLink",
                 "npmDev"

@@ -11,10 +11,12 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 import $package$.service.*
 import $package$.http.prometheus.*
+$if(db.truthy)$
 import $package$.services.FlywayService
 import $package$.services.FlywayServiceLive
 import $package$.repositories.UserRepositoryLive
 import $package$.repositories.Repository
+$endif$
 
 object HttpServer extends ZIOAppDefault {
 
@@ -31,6 +33,7 @@ object HttpServer extends ZIOAppDefault {
       )
       .options
 
+  $if(db.truthy)$
   val runMigrations = for {
     flyway <- ZIO.service[FlywayService]
     _ <- flyway.runMigrations().catchSome { case e =>
@@ -38,8 +41,9 @@ object HttpServer extends ZIOAppDefault {
              *> flyway.runRepair() *> flyway.runMigrations()
          }
   } yield ()
+  $endif$
 
-  private val server =
+  private val $if(db.truthy)$server$else$serverProgram$endif$ =
     for {
       _            <- Console.printLine("Starting server...")
       apiEndpoints <- HttpApi.endpointsZIO
@@ -51,21 +55,26 @@ object HttpServer extends ZIOAppDefault {
            )
     } yield ()
 
+  $if(db.truthy)$
   private val program =
     for {
       _ <- runMigrations
       _ <- server
     } yield ()
+  $endif$
 
   override def run =
-    program
+    $if(db.truthy)$program$else$serverProgram$endif$
       .provide(
         Server.default,
         // Service layers
+        $if(db.truthy)$
         PersonServiceLive.layer,
         FlywayServiceLive.configuredLayer,
+        JWTServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
         Repository.dataLayer
+        $endif$
       )
 }

@@ -110,12 +110,9 @@ lazy val client = scalajsProject("client")
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(
     libraryDependencies ++= Seq(
-      $if(scalariform.truthy)$
       // pull laminar 17.0.0
-      "dev.cheleb"    %%% "laminar-form-derivation-ui5" % "0.12.0",
-      $else$
-      "com.raquo"     %%% "laminar"                     % laminarVersion,
-      $endif$
+      "dev.cheleb"    %%% "laminar-form-derivation-ui5" % "0.14.0-RC3",
+      "dev.cheleb"    %%% "zio-laminar-tapir"           % "0.0.1-local",
       "io.frontroute" %%% "frontroute"                  % "0.19.0"
     )
   )
@@ -177,7 +174,6 @@ Global / onLoad := {
   val scalaVersionValue = (client / scalaVersion).value
   val outputFile =
     target.value / "build-env.sh"
-  if (!outputFile.exists()) {
     IO.writeLines(
       outputFile,
       s"""  
@@ -186,6 +182,5 @@ Global / onLoad := {
          |""".stripMargin.split("\n").toList,
       StandardCharsets.UTF_8
     )
-  }
   (Global / onLoad).value
 }
