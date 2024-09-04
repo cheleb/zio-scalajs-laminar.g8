@@ -43,32 +43,6 @@
         },
         $endif$
         {
-            "label": "docker",
-            "icon": {
-                "id": "database"
-            },
-            "type": "shell",
-            "command": "docker-compose up",
-            "presentation": {
-                "panel": "dedicated",
-                "group": "back"
-            },
-            "group": "build"
-        },
-        {
-            "label": "docker",
-            "icon": {
-                "id": "database"
-            },
-            "type": "shell",
-            "command": "docker-compose up",
-            "presentation": {
-                "panel": "dedicated",
-                "group": "back"
-            },
-            "group": "build"
-        },
-        {
             "label": "runDemo",
             "dependsOrder": "parallel",
             "dependsOn": [
