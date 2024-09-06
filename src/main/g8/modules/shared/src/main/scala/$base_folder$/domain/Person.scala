@@ -6,7 +6,7 @@ import zio.prelude.*
 import zio.prelude.Debug.Repr
 import zio.prelude.Debug.Renderer
 
-import zio.prelude.derivation.DebugGen
+import zio.prelude.magnolia.*
 
 case class Person(
   name: String,
@@ -16,10 +16,8 @@ case class Person(
   age: Int,
   pet: Either[Cat, Dog]
 ) derives JsonCodec,
-      Schema
-
-object Person:
-  given Debug[Person] = DebugGen.derived[Person]
+      Schema,
+      Debug
 
 opaque type Password = String
 
