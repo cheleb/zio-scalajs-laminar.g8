@@ -11,36 +11,43 @@ import $package$.app.login.LoginPasswordUI
 import $package$.http.endpoints.PersonEndpoint
 import $package$.domain.UserToken
 import dev.cheleb.ziolaminartapir.Session
+import $package$.domain.Password
 
 object Header:
   private val openPopoverBus = new EventBus[Boolean]
   private val profileId      = "profileId"
 
-  val credentials = Var(LoginPasswordUI("", ""))
+  val credentials = Var(LoginPasswordUI("", Password("")))
+
+  given Form[Password] = secretForm(Password(_))
 
   def apply(): HtmlElement =
     div(
       ShellBar(
         _.primaryTitle       := "ZIO Laminar Demo",
-        _.secondaryTitle     := "Secondary title",
+        _.secondaryTitle     := "And Tapir, UI5, and more",
         _.notificationsCount := "99+",
         _.showNotifications  := true,
-//        _.showProductSwitch  := true,
         _.showCoPilot   := true,
-        _.slots.profile := Avatar(idAttr := profileId, img(src := "questionmark.jpg")),
+        _.slots.profile := Avatar(idAttr := profileId, img(src := "img/questionmark.jpg")),
         _.events.onProfileClick.mapTo(true) --> openPopoverBus.writer
       ),
       Popover(
         _.openerId := profileId,
         _.open <-- openPopoverBus.events,
         // _.placement := PopoverPlacementType.Bottom,
-        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Login")),
+        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
         div(
           child.maybe <--
             session(
               UList(
                 _.separators := ListSeparator.None,
-                _.item(_.icon := IconName.settings, a("Settings", href := "/profile")),
+                _.item(_.icon := IconName.settings, a("Settings", href := "/profile"))
+                  .amend(
+                    onClick --> { _ =>
+                      openPopoverBus.emit(false)
+                    }
+                  ),
                 _.item(_.icon := IconName.`sys-help`, "Help"),
                 _.item(_.icon := IconName.log, "Sign out").amend(
                   onClick --> { _ =>
@@ -52,13 +59,22 @@ object Header:
             )(
               div(
                 credentials.asForm,
-                Button(
-                  "Login",
-                  onClick --> { _ =>
-                    loginHandler(session)
-                    openPopoverBus.emit(false)
-                  }
-                )
+                div(
+                  cls := "center",
+                  Button(
+                    "Login",
+                    onClick --> { _ =>
+                      loginHandler(session)
+                      openPopoverBus.emit(false)
+                    }
+                  )
+                ),
+                a("Sign up", href := "/signup")
+                  .amend(
+                    onClick --> { _ =>
+                      openPopoverBus.emit(false)
+                    }
+                  )
               )
             )
         )

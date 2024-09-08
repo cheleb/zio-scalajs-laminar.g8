@@ -171,6 +171,16 @@ def scalajsProject(projectId: String): Project =
 // This file will contain the SCALA_VERSION variable that can be used in the build process
 //
 Global / onLoad := {
+
+  // This is hack to share static files between server and client.
+  // It creates symlinks from server to client static files
+  // Ideally, we should use a shared folder for static files
+  // Or use a shared CDN
+  // Or copy the files to the target directory of the server at build time.
+
+  symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
+  symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
+
   val scalaVersionValue = (client / scalaVersion).value
   val outputFile =
     target.value / "build-env.sh"

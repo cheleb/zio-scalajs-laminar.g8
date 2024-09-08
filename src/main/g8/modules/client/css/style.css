@@ -1,0 +1,80 @@
+#root {
+  font-family: Quicksand, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+/** Reducing the size of ui5 inputs of type number to only 100px */
+ui5-input[type="Number"] {
+  width: 100px;
+  min-width: 100px;
+}
+
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pad-10 {
+  padding: 10px;
+}
+
+/* * {
+  box-sizing: border-box;
+} */
+
+.wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.wrapper>div {
+  border: 2px solid rgb(233 171 88);
+  border-radius: 10px;
+  padding: 1em;
+  color: #d9480f;
+}
+
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.scala {
+  grid-column: 3/5;
+  grid-row: 1;
+}
+
+.jvm {
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+}
+
+.js {
+  grid-column: 4 / 6;
+  grid-row: 2 / 3;
+}
+
+.shared {
+  grid-column: 3 / 5;
+  grid-row: 3/5;
+}
+
+.server {
+  grid-column: 2;
+  grid-row: 3/5;
+}
+
+.client {
+  grid-column: 5;
+  grid-row: 3/5;
+}

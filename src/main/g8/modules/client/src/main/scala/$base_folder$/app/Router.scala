@@ -26,9 +26,9 @@ object Router:
           },
           $endif$
           $if(scalariform.truthy)$
-          path("demos" / "scalariform") {
-            scalariform.ScalariformDemoPage()
-          },
+          path("signup") {
+            SignupPage()
+          }
           $endif$
           path("profile") {
             ProfilePage()

@@ -1,6 +1,7 @@
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.web._
 import com.typesafe.sbt.web.Import._
+import java.nio.file.Files
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import org.scalablytyped.converter.plugin._
 import org.scalablytyped.converter.plugin.STKeys._
@@ -128,5 +129,10 @@ $endif$
     case "prod" => ScalaJSBundlerPlugin
     case _      => ScalaJSPlugin
   }
+
+  def symlink(link: File, target: File): Unit =
+    if (!Files.exists(link.toPath))
+      if (Files.exists(target.toPath))
+        Files.createSymbolicLink(link.toPath, link.toPath.getParent.relativize(target.toPath))
 
 }
