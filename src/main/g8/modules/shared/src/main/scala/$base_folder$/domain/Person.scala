@@ -19,7 +19,7 @@ case class Person(
       Schema,
       Debug
 
-opaque type Password = String
+opaque type Password <: String = String
 
 object Password:
   given JsonCodec[Password] = JsonCodec.string

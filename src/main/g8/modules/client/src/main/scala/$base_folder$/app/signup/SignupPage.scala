@@ -4,11 +4,11 @@ import be.doeraene.webcomponents.ui5.Button
 
 import com.raquo.laminar.api.L.*
 
-import com.example.ziolaminardemo.app.given
+import $package$.app.given
+import $package$.domain.*
 
 import dev.cheleb.scalamigen.{*, given}
 
-import $package$.domain.*
 import dev.cheleb.ziolaminartapir.*
 import dev.cheleb.ziolaminartapir.ZJS.*
 

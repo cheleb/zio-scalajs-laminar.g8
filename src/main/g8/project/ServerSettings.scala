@@ -62,7 +62,6 @@ object ServerSettings {
       Seq(
         Assets / resourceGenerators += Def
           .taskDyn[Seq[File]] {
-            val baseDir    = baseDirectory.value
             val rootFolder = (Assets / resourceManaged).value / "public"
             rootFolder.mkdirs()
             (generator / Compile / runMain).toTask {

@@ -6,6 +6,7 @@ import frontroute.*
 import org.scalajs.dom
 
 import $package$.app.demos.*
+import $package$.app.signup.SignupPage
 
 object Router:
   private val externalUrlBus = EventBus[String]()
@@ -18,7 +19,7 @@ object Router:
           cls := "container-fluid",
           // potentially children
           (pathEnd | path("public") | path("public" / "index.html")) {
-            DemosPage()
+            HomePage()
           },
           $if(scalablytyped.truthy)$
           path("demos" / "scalablytyped") {
@@ -28,7 +29,7 @@ object Router:
           $if(scalariform.truthy)$
           path("signup") {
             SignupPage()
-          }
+          },
           $endif$
           path("profile") {
             ProfilePage()
