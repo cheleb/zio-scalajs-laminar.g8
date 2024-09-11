@@ -10,7 +10,6 @@ import $package$.domain.*
 import dev.cheleb.scalamigen.{*, given}
 
 import dev.cheleb.ziolaminartapir.*
-import dev.cheleb.ziolaminartapir.ZJS.*
 
 import zio.prelude.*
 

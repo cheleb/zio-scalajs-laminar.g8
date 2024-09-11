@@ -11,3 +11,5 @@ case class InvalidCredentialsException() extends ApplicationException("Invalid c
 case class UserAlreadyExistsException() extends ApplicationException("User already exists")
 
 case class UserNotFoundException(email: String) extends ApplicationException(s"User \$email not found")
+
+case object NotHostHeaderException extends ApplicationException("Host header is required")

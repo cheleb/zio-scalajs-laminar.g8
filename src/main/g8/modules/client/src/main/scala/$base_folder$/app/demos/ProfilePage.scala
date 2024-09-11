@@ -7,10 +7,6 @@ import $package$.domain.*
 import $package$.http.endpoints.PersonEndpoint
 
 import dev.cheleb.ziolaminartapir.*
-import dev.cheleb.ziolaminartapir.ZJS.*
-
-//import zio.prelude.*
-
 
 object ProfilePage {
 

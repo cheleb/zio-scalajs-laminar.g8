@@ -7,6 +7,7 @@ import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 import $package$.domain.*
 import $package$.login.LoginPassword
+import sttp.model.HeaderNames
 
 object PersonEndpoint extends BaseEndpoint:
 
@@ -25,10 +26,11 @@ object PersonEndpoint extends BaseEndpoint:
     .out(jsonBody[User])
     .description("Create person")
 
-  val login: Endpoint[Unit, LoginPassword, Throwable, UserToken, Any] = baseEndpoint
+  val login: Endpoint[Unit, (Option[String], LoginPassword), Throwable, UserToken, Any] = baseEndpoint
     .tag("person")
     .name("login")
     .post
+    .in(header[Option[String]](HeaderNames.Host))
     .in("login")
     .in(
       jsonBody[LoginPassword]

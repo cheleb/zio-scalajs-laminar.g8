@@ -15,7 +15,7 @@ import $package$.config.JWTConfig
 import $package$.domain.*
 
 trait JWTService {
-  def createToken(user: User): Task[UserToken]
+  def createToken(issuer: String, user: User): Task[UserToken]
   def verifyToken(token: String): Task[UserID]
 }
 
@@ -34,7 +34,7 @@ class JWTServiceLive private (jwtConfig: JWTConfig, clock: JavaClock) extends JW
     .asInstanceOf[BaseVerification]
     .build(clock)
 
-  override def createToken(user: User): Task[UserToken] =
+  override def createToken(issuer: String, user: User): Task[UserToken] =
     for {
       now      <- ZIO.attempt(clock.instant())
       userId   <- ZIO.fromOption(user.id).orElseFail(new RuntimeException("User ID is missing"))
@@ -49,7 +49,7 @@ class JWTServiceLive private (jwtConfig: JWTConfig, clock: JavaClock) extends JW
                    .withClaim(CLAIN_USER_NAME, user.email)
                    .sign(algorithm)
                )
-    } yield UserToken(userId, user.email, token, expiresAt.getEpochSecond)
+    } yield UserToken(issuer, userId, user.email, token, expiresAt.getEpochSecond)
 
   override def verifyToken(token: String): Task[UserID] =
     for {

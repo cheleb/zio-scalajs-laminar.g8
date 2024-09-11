@@ -5,7 +5,7 @@ import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
 
 import dev.cheleb.scalamigen.{*, given}
-import dev.cheleb.ziolaminartapir.ZJS.*
+import dev.cheleb.ziolaminartapir.*
 
 import $package$.app.login.LoginPasswordUI
 import $package$.http.endpoints.PersonEndpoint
@@ -84,6 +84,6 @@ object Header:
 
   def loginHandler(session: Session[UserToken]): Unit =
     PersonEndpoint
-      .login(credentials.now().http)
+      .login(None, credentials.now().http)
       .map(token => session.setUserState(token))
       .runJs
