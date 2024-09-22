@@ -4,6 +4,7 @@ import dev.cheleb.ziojwt.SecuredBaseController
 
 import zio.*
 
+import sttp.model.Uri
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.ztapir.*
 
@@ -21,16 +22,14 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
   val create: ServerEndpoint[Any, Task] = PersonEndpoint.createEndpoint
     .zServerLogic(p => personService.register(p))
 
-  val login: ServerEndpoint[Any, Task] = PersonEndpoint.login.zServerLogic { (host, lp) =>
+  val login: ServerEndpoint[Any, Task] = PersonEndpoint.login.zServerLogic { lp =>
     for {
       user  <- personService.login(lp.login, lp.password)
-      host  <- ZIO.fromOption(host).orElseFail(NotHostHeaderException)
-      token <- jwtService.createToken(host, user)
+      token <- jwtService.createToken(user)
     } yield token
   }
 
-  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => details =>
-    ZIO.logWarning(s"Getting profile for \$userId") *>
+  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => _ =>
       personService.getProfile(userId)
   }
 

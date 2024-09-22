@@ -6,7 +6,6 @@ import frontroute.*
 import org.scalajs.dom
 
 import $package$.app.demos.*
-import $package$.app.signup.SignupPage
 
 object Router:
   private val externalUrlBus = EventBus[String]()
@@ -26,13 +25,11 @@ object Router:
             scalablytyped.ScalablytypedDemoPage()
           },
           $endif$
-          $if(scalariform.truthy)$
           path("signup") {
-            SignupPage()
+            signup.SignupPage()
           },
-          $endif$
           path("profile") {
-            ProfilePage()
+            profile.ProfilePage()
           },
           noneMatched {
             div("404 Not Found")

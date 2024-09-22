@@ -38,52 +38,52 @@ object Header:
         _.open <-- openPopoverBus.events,
         // _.placement := PopoverPlacementType.Bottom,
         div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
-        div(
-          child.maybe <--
-            session(
-              UList(
-                _.separators := ListSeparator.None,
-                _.item(_.icon := IconName.settings, a("Settings", href := "/profile"))
-                  .amend(
-                    onClick --> { _ =>
-                      openPopoverBus.emit(false)
-                    }
-                  ),
-                _.item(_.icon := IconName.`sys-help`, "Help"),
-                _.item(_.icon := IconName.log, "Sign out").amend(
-                  onClick --> { _ =>
-                    session.clearUserState()
-                    openPopoverBus.emit(false)
-                  }
-                )
+        child <-- session(
+          div(
+            credentials.asForm,
+            div(
+              cls := "center",
+              Button(
+                "Login",
+                onClick --> { _ =>
+                  loginHandler(session)
+                  openPopoverBus.emit(false)
+                }
               )
-            )(
-              div(
-                credentials.asForm,
-                div(
-                  cls := "center",
-                  Button(
-                    "Login",
-                    onClick --> { _ =>
-                      loginHandler(session)
-                      openPopoverBus.emit(false)
-                    }
-                  )
-                ),
-                a("Sign up", href := "/signup")
-                  .amend(
-                    onClick --> { _ =>
-                      openPopoverBus.emit(false)
-                    }
-                  )
+            ),
+            a("Sign up", href := "/signup")
+              .amend(
+                onClick --> { _ =>
+                  openPopoverBus.emit(false)
+                }
               )
+          )
+        )(userToken =>
+          UList(
+            _.separators := ListSeparator.None,
+            _.item(
+              _.icon             := IconName.settings,
+              a("Settings", href := "/profile", title := s" Logged in as \${userToken.email}")
             )
+              .amend(
+                onClick --> { _ =>
+                  openPopoverBus.emit(false)
+                }
+              ),
+            _.item(_.icon := IconName.`sys-help`, "Help"),
+            _.item(_.icon := IconName.log, "Sign out").amend(
+              onClick --> { _ =>
+                session.clearUserState()
+                openPopoverBus.emit(false)
+              }
+            )
+          )
         )
       )
     )
 
   def loginHandler(session: Session[UserToken]): Unit =
     PersonEndpoint
-      .login(None, credentials.now().http)
-      .map(token => session.setUserState(token))
+      .login(credentials.now().http)
+      .map(token => session.saveToken(SameOriginBackendClientLive.backendBaseURL, token))
       .runJs

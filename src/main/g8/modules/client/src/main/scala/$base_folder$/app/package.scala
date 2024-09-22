@@ -1,13 +1,19 @@
 package $package$.app
 
+import dev.cheleb.scalamigen.*
 import dev.cheleb.scalamigen.ui5.UI5WidgetFactory
-import dev.cheleb.scalamigen.WidgetFactory
 
-import dev.cheleb.ziolaminartapir.Session
+import dev.cheleb.ziolaminartapir.*
 
-import dev.cheleb.ziolaminartapir.SessionLive
+import $package$.domain.*
 
-import $package$.domain.UserToken
+given Defaultable[Cat] with
+  def default = Cat("")
+
+given Defaultable[Dog] with
+  def default = Dog("", 1)
+
+given Form[Password] = secretForm(Password(_))
 
 given f: WidgetFactory = UI5WidgetFactory
 

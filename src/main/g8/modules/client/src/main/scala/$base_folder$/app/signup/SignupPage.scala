@@ -1,5 +1,7 @@
 package $package$.app.signup
 
+import zio.prelude.*
+
 import be.doeraene.webcomponents.ui5.Button
 
 import com.raquo.laminar.api.L.*
@@ -11,24 +13,17 @@ import dev.cheleb.scalamigen.{*, given}
 
 import dev.cheleb.ziolaminartapir.*
 
-import zio.prelude.*
 
 import $package$.http.endpoints.PersonEndpoint
 
-given Form[Password] = secretForm(Password(_))
-
-given Defaultable[Cat] with
-  def default = Cat("")
-
-given Defaultable[Dog] with
-  def default = Dog("", 1)
 
 object SignupPage:
   def apply() =
     val personVar = Var(
       Person("John", "john.does@foo.bar", Password("notsecured"), Password("notsecured"), 42, Left(Cat("Fluffy")))
     )
-    val userBus = EventBus[User]()
+    val userBus  = EventBus[User]()
+    val errorBus = EventBus[Throwable]()
 
     div(
       styleAttr := "width: 100%; overflow: hidden;",
@@ -51,7 +46,7 @@ object SignupPage:
 
             PersonEndpoint
               .createEndpoint(personVar.now())
-              .emitTo(userBus)
+              .emitTo(userBus, errorBus)
 
             // scalafmt:on
 
@@ -63,7 +58,9 @@ object SignupPage:
         h1("Databinding"),
         child.text <-- personVar.signal.map(p => s"\${p.render}"),
         h1("Response"),
-        child <-- userBus.events.map(renderUser)
+        child <-- userBus.events.map(renderUser),
+        h1("Errors"),
+        child <-- errorBus.events.map(e => div(s"Error: \${e.getMessage}"))
       )
     )
 
