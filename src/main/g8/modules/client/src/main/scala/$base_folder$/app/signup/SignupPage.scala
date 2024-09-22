@@ -13,9 +13,7 @@ import dev.cheleb.scalamigen.{*, given}
 
 import dev.cheleb.ziolaminartapir.*
 
-
 import $package$.http.endpoints.PersonEndpoint
-
 
 object SignupPage:
   def apply() =
