@@ -12,10 +12,8 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 import $package$.service.*
 import $package$.http.prometheus.*
 $if(db.truthy)$
-import $package$.services.FlywayService
-import $package$.services.FlywayServiceLive
-import $package$.repositories.UserRepositoryLive
-import $package$.repositories.Repository
+import $package$.services.*
+import $package$.repositories.*
 $endif$
 
 object HttpServer extends ZIOAppDefault {
@@ -77,6 +75,7 @@ object HttpServer extends ZIOAppDefault {
         JWTServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
+        PetRepositoryLive.layer,
         Repository.dataLayer
         $endif$
       )

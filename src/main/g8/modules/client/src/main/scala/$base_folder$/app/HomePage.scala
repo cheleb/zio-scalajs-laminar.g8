@@ -26,8 +26,6 @@ object HomePage:
         display := "flex",
         cls     := "server",
         ul(
-          li("zio-http"),
-          li("zio-json"),
           li("zio-logging")
         )
       ),
@@ -37,12 +35,10 @@ object HomePage:
         div(
           img(src := "img/zio.png")
         ),
-        div(
-          display := "flex",
-          div(
-            img(src := "img/tapir.svg", width := "100px")
-          ),
-          p(marginTop := "3em", "Tapir")
+        ul(
+          li("zio-http"),
+          li("zio-json"),
+          li("Tapir", img(src := "img/tapir.svg", verticalAlign := "middle", width := "50px"))
         )
       ),
       div(

@@ -39,7 +39,6 @@ class JWTServiceLive private (jwtConfig: JWTConfig, clock: JavaClock) extends JW
   override def createToken(user: User): Task[UserToken] =
     for {
       now      <- ZIO.attempt(clock.instant())
-      userId   <- ZIO.fromOption(user.id).orElseFail(new RuntimeException("User ID is missing"))
       expiresAt = now.plus(TTL)
       token <- ZIO.attempt(
                  JWT
@@ -47,11 +46,11 @@ class JWTServiceLive private (jwtConfig: JWTConfig, clock: JavaClock) extends JW
                    .withIssuer(ISSUER)
                    .withIssuedAt(now)
                    .withExpiresAt(expiresAt)
-                   .withSubject(userId.toString)
+                   .withSubject(user.id.toString)
                    .withClaim(CLAIN_USER_NAME, user.email)
                    .sign(algorithm)
                )
-    } yield UserToken(userId, user.email, token, expiresAt.getEpochSecond)
+    } yield UserToken(user.id, user.email, token, expiresAt.getEpochSecond)
 
   override def verifyToken(token: String): Task[UserID] =
     for {
