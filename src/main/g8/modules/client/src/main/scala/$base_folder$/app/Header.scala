@@ -51,7 +51,7 @@ object Header:
       child <-- loginErrorEventBus.events.map { error =>
         div(
           cls := "center",
-          Text(s"Error: ${error.getMessage}")
+          Text(s"Error: \${error.getMessage}")
         )
       },
       div(
@@ -77,7 +77,7 @@ object Header:
       _.separators := ListSeparator.None,
       _.item(
         _.icon             := IconName.settings,
-        a("Settings", href := "/profile", title := s" Logged in as ${userToken.email}")
+        a("Settings", href := "/profile", title := s" Logged in as \${userToken.email}")
       )
         .amend(
           onClick --> { _ =>
