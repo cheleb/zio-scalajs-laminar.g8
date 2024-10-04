@@ -4,26 +4,25 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
   val Versions = new {
-    val chimney         = "1.4.0"
-    $if(db.truthy)$
-    val flywaydb        = "10.14.0"
-    $endif$
-    val iron            = "2.6.0"
-    val javaMail        = "1.6.2"
-    val osLib           = "0.10.2"
-    val postgresql      = "42.7.3"
-    $if(quill.truthy)$val quill           = "4.8.5"$endif$
-    val scopt           = "4.1.0"
-    val slf4j           = "2.0.13"
-    val stripe          = "25.10.0"
-    val sttp            = "3.9.6"
-    val tapir           = "1.11.4"
-    val zio             = "2.1.9"
-    val zioConfig       = "4.0.2"
-    val zioJson         = "0.7.0"
-    val zioLaminarTapir = "0.1.1"
-    val zioLogging      = "2.2.4"
-    val zioPrelude      = "1.0.0-RC31"
+    val chimney               = "1.4.0"
+    val flywaydb              = "10.19.0"
+    val iron                  = "2.6.0"
+    val javaMail              = "1.6.2"
+    val laminarFormDerivation = "0.14.0"
+    val osLib                 = "0.10.2"
+    val postgresql            = "42.7.4"
+    val quill                 = "4.8.5"
+    val scopt                 = "4.1.0"
+    val slf4j                 = "2.0.16"
+    val stripe                = "25.10.0"
+    val sttp                  = "3.9.6"
+    val tapir                 = "1.11.4"
+    val zio                   = "2.1.9"
+    val zioConfig             = "4.0.2"
+    val zioJson               = "0.7.0"
+    val zioLaminarTapir       = "0.1.1"
+    val zioLogging            = "2.2.4"
+    val zioPrelude            = "1.0.0-RC31"
   }
 
   private val configDependencies = Seq(
@@ -66,14 +65,15 @@ $endif$
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client"    % Versions.tapir,
-      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"       % Versions.tapir,
-      "com.softwaremill.sttp.client3" %%% "zio"                  % Versions.sttp,
-      "dev.zio"                       %%% "zio-json"             % Versions.zioJson,
-      "dev.zio"                       %%% "zio-prelude"          % Versions.zioPrelude,
-      "dev.zio"                       %%% "zio-prelude-magnolia" % Versions.zioPrelude,
-      "io.scalaland"                  %%% "chimney"              % Versions.chimney,
-      "dev.cheleb"                    %%% "zio-jwt"              % Versions.zioLaminarTapir
+      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client"              % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"                 % Versions.tapir,
+      "com.softwaremill.sttp.client3" %%% "zio"                            % Versions.sttp,
+      "dev.cheleb"                    %%% "laminar-form-derivation-shared" % Versions.laminarFormDerivation,
+      "dev.zio"                       %%% "zio-json"                       % Versions.zioJson,
+      "dev.zio"                       %%% "zio-prelude"                    % Versions.zioPrelude,
+      "dev.zio"                       %%% "zio-prelude-magnolia"           % Versions.zioPrelude,
+      "io.scalaland"                  %%% "chimney"                        % Versions.chimney,
+      "dev.cheleb"                    %%% "zio-jwt"                        % Versions.zioLaminarTapir
     )
 
   val staticFilesGeneratorDependencies =

@@ -9,7 +9,7 @@ import com.raquo.laminar.api.L.*
 import $package$.app.given
 import $package$.domain.*
 
-import dev.cheleb.scalamigen.{*, given}
+import dev.cheleb.scalamigen.*
 
 import dev.cheleb.ziolaminartapir.*
 

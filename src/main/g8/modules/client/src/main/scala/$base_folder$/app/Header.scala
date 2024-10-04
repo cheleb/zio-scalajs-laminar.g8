@@ -4,10 +4,10 @@ import be.doeraene.webcomponents.ui5.*
 import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
 
-import dev.cheleb.scalamigen.{*, given}
+import dev.cheleb.scalamigen.*
 import dev.cheleb.ziolaminartapir.*
 
-import $package$.app.login.LoginPasswordUI
+import $package$.login.LoginPassword
 import $package$.http.endpoints.PersonEndpoint
 import $package$.domain.UserToken
 import dev.cheleb.ziolaminartapir.Session
@@ -17,7 +17,10 @@ object Header:
   private val openPopoverBus = new EventBus[Boolean]
   private val profileId      = "profileId"
 
-  val credentials = Var(LoginPasswordUI("", Password("")))
+  private val loginErrorEventBus   = new EventBus[Throwable]
+  private val loginSuccessEventBus = new EventBus[Unit]
+
+  val credentials = Var(LoginPassword("", Password("")))
 
   given Form[Password] = secretForm(Password(_))
 
@@ -35,55 +38,63 @@ object Header:
       ),
       Popover(
         _.openerId := profileId,
-        _.open <-- openPopoverBus.events,
+        _.open <-- openPopoverBus.events.mergeWith(loginSuccessEventBus.events.map(_ => false)),
         // _.placement := PopoverPlacementType.Bottom,
         div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
-        child <-- session(
-          div(
-            credentials.asForm,
-            div(
-              cls := "center",
-              Button(
-                "Login",
-                onClick --> { _ =>
-                  loginHandler(session)
-                  openPopoverBus.emit(false)
-                }
-              )
-            ),
-            a("Sign up", href := "/signup")
-              .amend(
-                onClick --> { _ =>
-                  openPopoverBus.emit(false)
-                }
-              )
-          )
-        )(userToken =>
-          UList(
-            _.separators := ListSeparator.None,
-            _.item(
-              _.icon             := IconName.settings,
-              a("Settings", href := "/profile", title := s" Logged in as \${userToken.email}")
-            )
-              .amend(
-                onClick --> { _ =>
-                  openPopoverBus.emit(false)
-                }
-              ),
-            _.item(_.icon := IconName.`sys-help`, "Help"),
-            _.item(_.icon := IconName.log, "Sign out").amend(
-              onClick --> { _ =>
-                session.clearUserState()
-                openPopoverBus.emit(false)
-              }
-            )
-          )
+        child <-- session(notLogged)(logged)
+      )
+    )
+
+  def notLogged =
+    div(
+      credentials.asForm,
+      child <-- loginErrorEventBus.events.map { error =>
+        div(
+          cls := "center",
+          Text(s"Error: ${error.getMessage}")
         )
+      },
+      div(
+        cls := "center",
+        Button(
+          "Login",
+          disabled <-- credentials.signal.map(_.isIncomplete),
+          onClick --> { _ =>
+            loginHandler(session)
+          }
+        )
+      ),
+      a("Sign up", href := "/signup")
+        .amend(
+          onClick --> { _ =>
+            openPopoverBus.emit(false)
+          }
+        )
+    )
+
+  def logged(userToken: UserToken) =
+    UList(
+      _.separators := ListSeparator.None,
+      _.item(
+        _.icon             := IconName.settings,
+        a("Settings", href := "/profile", title := s" Logged in as ${userToken.email}")
+      )
+        .amend(
+          onClick --> { _ =>
+            openPopoverBus.emit(false)
+          }
+        ),
+      _.item(_.icon := IconName.`sys-help`, "Help"),
+      _.item(_.icon := IconName.log, "Sign out").amend(
+        onClick --> { _ =>
+          session.clearUserState()
+          openPopoverBus.emit(false)
+        }
       )
     )
 
   def loginHandler(session: Session[UserToken]): Unit =
     PersonEndpoint
-      .login(credentials.now().http)
+      .login(credentials.now())
       .map(token => session.saveToken(SameOriginBackendClientLive.backendBaseURL, token))
-      .runJs
+      .emitTo(loginSuccessEventBus, loginErrorEventBus)
