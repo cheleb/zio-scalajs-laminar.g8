@@ -2,17 +2,18 @@ package $package$.app.signup
 
 import zio.prelude.*
 
-import be.doeraene.webcomponents.ui5.Button
+import be.doeraene.webcomponents.ui5.*
+import be.doeraene.webcomponents.ui5.configkeys.ToastPlacement
 
 import com.raquo.laminar.api.L.*
 
-import $package$.app.given
-import $package$.domain.*
-
 import dev.cheleb.scalamigen.*
-
 import dev.cheleb.ziolaminartapir.*
 
+import scala.concurrent.duration.DurationInt
+
+import $package$.app.given
+import $package$.domain.*
 import $package$.http.endpoints.PersonEndpoint
 
 object SignupPage:
@@ -23,22 +24,45 @@ object SignupPage:
     val userBus  = EventBus[User]()
     val errorBus = EventBus[Throwable]()
 
+    val debugVar = Var(false)
+
     div(
-      styleAttr := "width: 100%; overflow: hidden;",
+      styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
       h1("Signup"),
       div(
         styleAttr := "width: 600px; float: left;",
         personVar.asForm,
-        child.maybe <-- personVar.signal.map {
-          case Person(_, _, password, passwordConfirmation, _, _) if password != passwordConfirmation =>
-            Some(div("Passwords do not match"))
-          case _ => None
+        children <-- personVar.signal.map {
+          _.errorMessages.map(div(_)).toSeq
         }
       ),
       div(
-        styleAttr := "width: 100px; float: left; margin-top: 200px;",
+        styleAttr := "float: right;",
+        Switch(
+          _.textOn  := "🔎",
+          _.textOff := "🔎",
+          _.tooltip := "On/Off Switch",
+          onChange.mapToChecked --> { checked =>
+            debugVar.set(checked)
+          }
+        ),
+        div(
+          styleAttr := "float: both;",
+          child <-- debugVar.signal.map:
+            case true =>
+              div(
+                styleAttr := "max-width: 300px; margin:1em auto",
+                Title("Databinding"),
+                child.text <-- personVar.signal.map(p => s"\${p.render}")
+              )
+            case false => div()
+        )
+      ),
+      div(
+        styleAttr := "clear:both;max-width: fit-content; margin:1em auto",
         Button(
-          "-- Post -->",
+          "Create",
+          disabled <-- personVar.signal.map(_.errorMessages.nonEmpty),
           onClick --> { _ =>
             // scalafmt:off
 
@@ -51,14 +75,19 @@ object SignupPage:
           }
         )
       ),
-      div(
-        styleAttr := "width: 600px; float: left;",
-        h1("Databinding"),
-        child.text <-- personVar.signal.map(p => s"\${p.render}"),
-        h1("Response"),
+      Toast(
+        cls := "srf-valid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
         child <-- userBus.events.map(renderUser),
-        h1("Errors"),
-        child <-- errorBus.events.map(e => div(s"Error: \${e.getMessage}"))
+        _.open <-- userBus.events.map(_ => true)
+      ),
+      Toast(
+        cls := "srf-invalid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
+        child <-- errorBus.events.map(_.getMessage()),
+        _.open <-- errorBus.events.map(_ => true)
       )
     )
 

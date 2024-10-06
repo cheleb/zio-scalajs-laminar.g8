@@ -33,12 +33,16 @@ object HomePage:
         alignItems := "center",
         cls        := "shared",
         div(
-          img(src := "img/zio.png")
-        ),
-        ul(
-          li("zio-http"),
-          li("zio-json"),
-          li("Tapir", img(src := "img/tapir.svg", verticalAlign := "middle", width := "50px"))
+          img(src := "img/zio.png"),
+          ul(
+            styleAttr := "float: right; clear: left; margin-right: 2em;",
+            li("Iron")
+          ),
+          ul(
+            li("zio-http"),
+            li("zio-json"),
+            li("Tapir", img(src := "img/tapir.svg", verticalAlign := "middle", width := "50px"))
+          )
         )
       ),
       div(

@@ -18,36 +18,40 @@ object ProfilePage:
         onMountCallback { _ =>
           PersonEndpoint.profile(false).emitTo(userBus)
         },
-        h1("Profile Page"),
-        child <-- userBus.events.map { case (user, maybePet) =>
-          div(
-            h2("User"),
-            div("Name: ", user.name),
-            div("Email: ", user.email),
-            div("Age: ", user.age.toString),
-            user.petType.map(pt => s"Has a \$pt").getOrElse("No pet"),
-            input(
-              tpe     := "checkbox",
-              checked := maybePet.isDefined,
-              onInput.mapToChecked --> { withPet =>
-                PersonEndpoint.profile(withPet).emitTo(userBus)
-              }
-            ),
-            maybePet.map { pet =>
-              div(
-                h2("Pet"),
-                div("Name: ", pet.name),
+        div(
+          styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
+          h1("Profile Page"),
+          child <-- userBus.events.map { case (user, maybePet) =>
+            div(
+              cls := "srf-form",
+              h2("User"),
+              div("Name: ", user.name),
+              div("Email: ", user.email),
+              div("Age: ", user.age.toString),
+              user.petType.map(pt => s"Has a \$pt").getOrElse("No pet"),
+              input(
+                tpe     := "checkbox",
+                checked := maybePet.isDefined,
+                onInput.mapToChecked --> { withPet =>
+                  PersonEndpoint.profile(withPet).emitTo(userBus)
+                }
+              ),
+              maybePet.map { pet =>
                 div(
-                  "Type: ",
-                  pet match {
-                    case _: Cat => "Cat"
-                    case _: Dog => "Dog"
-                  }
+                  h2("Pet"),
+                  div("Name: ", pet.name),
+                  div(
+                    "Type: ",
+                    pet match {
+                      case _: Cat => "Cat"
+                      case _: Dog => "Dog"
+                    }
+                  )
                 )
-              )
-            }.getOrElse(div())
-          )
-        }
+              }.getOrElse(div())
+            )
+          }
+        )
       )
     )
   )

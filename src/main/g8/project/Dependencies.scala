@@ -8,7 +8,7 @@ object Dependencies {
     val flywaydb              = "10.19.0"
     val iron                  = "2.6.0"
     val javaMail              = "1.6.2"
-    val laminarFormDerivation = "0.15.0"
+    val laminarFormDerivation = "0.16.1"
     val osLib                 = "0.10.2"
     val postgresql            = "42.7.4"
     val quill                 = "4.8.5"
@@ -50,7 +50,6 @@ $endif$
 
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(
-      "io.github.iltotore"          %% "iron-zio-json"            % Versions.iron,
       "com.softwaremill.sttp.tapir" %% "tapir-zio"                % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
@@ -65,15 +64,17 @@ $endif$
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client"              % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-iron"                     % Versions.tapir,
       "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"                 % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client"              % Versions.tapir,
       "com.softwaremill.sttp.client3" %%% "zio"                            % Versions.sttp,
       "dev.cheleb"                    %%% "laminar-form-derivation-shared" % Versions.laminarFormDerivation,
       "dev.zio"                       %%% "zio-json"                       % Versions.zioJson,
       "dev.zio"                       %%% "zio-prelude"                    % Versions.zioPrelude,
       "dev.zio"                       %%% "zio-prelude-magnolia"           % Versions.zioPrelude,
-      "io.scalaland"                  %%% "chimney"                        % Versions.chimney,
-      "dev.cheleb"                    %%% "zio-jwt"                        % Versions.zioLaminarTapir
+      "dev.cheleb"                    %%% "zio-jwt"                        % Versions.zioLaminarTapir,
+      "io.github.iltotore"             %% "iron-zio-json"                  % Versions.iron,
+      "io.scalaland"                  %%% "chimney"                        % Versions.chimney
     )
 
   val staticFilesGeneratorDependencies =

@@ -78,3 +78,31 @@ ui5-input[type="Number"] {
   grid-column: 5;
   grid-row: 3/5;
 }
+
+.srf-form {
+  border: 1px solid rgb(139, 139, 130);
+  border-radius: 10px;
+  background-color: #f0f0f0;
+  margin: 1em;
+  padding: 1em;
+}
+
+.srf-field {
+  background-color: #f0f0f079;
+}
+
+.srf-panel {
+  border: 1px solid rgb(139, 139, 130);
+  border-radius: 10px;
+  margin: 1em;
+}
+
+.srf-form:has(.srf-invalid) {
+  border: 1px solid red;
+
+}
+
+
+.srf-invalid {
+  border: 1px solid red;
+}

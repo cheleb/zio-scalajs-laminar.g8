@@ -7,7 +7,9 @@ import zio.prelude.Debug.Repr
 import zio.prelude.Debug.Renderer
 
 import zio.prelude.magnolia.*
+import dev.cheleb.scalamigen.NoPanel
 
+@NoPanel
 case class Person(
   name: String,
   email: String,
@@ -17,7 +19,13 @@ case class Person(
   pet: Either[Cat, Dog]
 ) derives JsonCodec,
       Schema,
-      Debug
+      Debug {
+  def errorMessages = {
+    val passwordErrors = if password == passwordConfirmation then Nil else List("Passwords do not match")
+    val ageErrors      = if age >= 18 then Nil else List("You must be at least 18 years old")
+    passwordErrors ++ ageErrors
+  }
+}
 
 opaque type Password <: String = String
 
