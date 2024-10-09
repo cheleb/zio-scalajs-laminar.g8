@@ -56,20 +56,17 @@ object HttpServer extends ZIOAppDefault {
            )
     } yield ()
 
-  $if(db.truthy)$
   private val program =
     for {
       _ <- runMigrations
       _ <- server
     } yield ()
-  $endif$
 
   override def run =
-    $if(db.truthy)$program$else$serverProgram$endif$
+    program
       .provide(
         Server.default,
         // Service layers
-        $if(db.truthy)$
         PersonServiceLive.layer,
         FlywayServiceLive.configuredLayer,
         JWTServiceLive.configuredLayer,
@@ -77,6 +74,5 @@ object HttpServer extends ZIOAppDefault {
         UserRepositoryLive.layer,
         PetRepositoryLive.layer,
         Repository.dataLayer
-        $endif$
       )
 }
