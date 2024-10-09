@@ -31,18 +31,14 @@ object Dependencies {
     "dev.zio" %% "zio-config-typesafe" % Versions.zioConfig
   )
 
-$if(db.truthy)$
   private val databaseDependencies = Seq(
     "org.flywaydb"   % "flyway-core"                % Versions.flywaydb,
     "org.flywaydb"   % "flyway-database-postgresql" % Versions.flywaydb,
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
-$endif$
-$if(quill.truthy)$
   private val quillDependencies = Seq(
     "io.getquill" %% "quill-jdbc-zio" % Versions.quill
   )
-$endif$
 
   private val jwtDependencies = Seq(
     "com.auth0" % "java-jwt" % "4.4.0"
@@ -57,9 +53,9 @@ $endif$
       "dev.cheleb"                  %% "zio-jwt-server"           % Versions.zioLaminarTapir,
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
-      configDependencies$if(db.truthy)$ ++
-      databaseDependencies$endif$$if(quill.truthy)$ ++
-      quillDependencies$endif$ ++
+      configDependencies ++
+      databaseDependencies ++
+      quillDependencies ++
       jwtDependencies
 
   val sharedJvmAndJsLibraryDependencies =
