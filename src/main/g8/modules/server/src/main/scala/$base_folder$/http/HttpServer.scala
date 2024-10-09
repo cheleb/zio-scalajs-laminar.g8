@@ -11,10 +11,8 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 import $package$.service.*
 import $package$.http.prometheus.*
-$if(db.truthy)$
 import $package$.services.*
 import $package$.repositories.*
-$endif$
 
 object HttpServer extends ZIOAppDefault {
 
