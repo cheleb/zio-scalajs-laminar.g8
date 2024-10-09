@@ -29,7 +29,6 @@ object HttpServer extends ZIOAppDefault {
       )
       .options
 
-  $if(db.truthy)$
   val runMigrations = for {
     flyway <- ZIO.service[FlywayService]
     _ <- flyway.runMigrations().catchSome { case e =>
@@ -37,9 +36,8 @@ object HttpServer extends ZIOAppDefault {
              *> flyway.runRepair() *> flyway.runMigrations()
          }
   } yield ()
-  $endif$
 
-  private val $if(db.truthy)$server$else$serverProgram$endif$ =
+  private val server =
     for {
       _            <- Console.printLine("Starting server...")
       apiEndpoints <- HttpApi.endpointsZIO
