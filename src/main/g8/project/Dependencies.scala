@@ -17,10 +17,10 @@ object Dependencies {
     val stripe                = "25.10.0"
     val sttp                  = "3.9.6"
     val tapir                 = "1.11.5"
-    val zio                   = "2.1.9"
+    val zio                   = "2.1.11"
     val zioConfig             = "4.0.2"
     val zioJson               = "0.7.3"
-    val zioLaminarTapir       = "0.1.1"
+    val zioLaminarTapir       = "0.2.0"
     val zioLogging            = "2.2.4"
     val zioPrelude            = "1.0.0-RC31"
   }

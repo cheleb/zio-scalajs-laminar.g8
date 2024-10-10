@@ -2,8 +2,6 @@ package $package$.service
 
 import zio.*
 
-import dev.cheleb.ziojwt.Hasher
-
 import io.scalaland.chimney.dsl._
 import java.time.Instant
 import java.time.ZonedDateTime
