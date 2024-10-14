@@ -16,7 +16,7 @@ export default defineConfig({
         uriPrefix: 'scalajs',
     })],
     build: {
-        sourcemap: true,
+        sourcemap: 'inline',
     },
     // base: "/$projectId$",
 
