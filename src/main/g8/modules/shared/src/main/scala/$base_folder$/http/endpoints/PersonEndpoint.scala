@@ -10,7 +10,7 @@ import sttp.model.HeaderNames
 
 object PersonEndpoint extends BaseEndpoint:
 
-  val createEndpoint: PublicEndpoint[Person, Throwable, User, Any] = baseEndpoint
+  val create: PublicEndpoint[Person, Throwable, User, Any] = baseEndpoint
     .tag("person")
     .name("person")
     .post

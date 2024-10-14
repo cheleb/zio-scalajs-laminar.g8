@@ -18,8 +18,9 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     extends BaseController
     with SecuredBaseController[String, UserID](jwtService.verifyToken) {
 
-  val create: ServerEndpoint[Any, Task] = PersonEndpoint.createEndpoint
-    .zServerLogic(p => personService.register(p))
+  val create: ServerEndpoint[Any, Task] = PersonEndpoint.create
+    .zServerLogic:
+      personService.register
 
   val login: ServerEndpoint[Any, Task] = PersonEndpoint.login.zServerLogic { lp =>
     for {

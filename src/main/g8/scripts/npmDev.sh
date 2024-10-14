@@ -22,4 +22,5 @@ echo " * SCALA_VERSION=\$SCALA_VERSION"
 rm -f modules/client/target/scala-\$SCALA_VERSION/client-fastopt/main.js
 touch \$NPM_DEV_STARTED
 cd modules/client
+#DEBUG="vite:sourcemap" npm run dev
 npm run dev

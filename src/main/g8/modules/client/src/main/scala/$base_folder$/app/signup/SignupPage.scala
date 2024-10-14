@@ -31,33 +31,15 @@ object SignupPage:
       h1("Signup"),
       div(
         styleAttr := "width: 600px; float: left;",
+        //
+        // The form is generated from the case class
+        //
         personVar.asForm,
         children <-- personVar.signal.map {
           _.errorMessages.map(div(_)).toSeq
         }
       ),
-      div(
-        styleAttr := "float: right;",
-        Switch(
-          _.textOn  := "🔎",
-          _.textOff := "🔎",
-          _.tooltip := "On/Off Switch",
-          onChange.mapToChecked --> { checked =>
-            debugVar.set(checked)
-          }
-        ),
-        div(
-          styleAttr := "float: both;",
-          child <-- debugVar.signal.map:
-            case true =>
-              div(
-                styleAttr := "max-width: 300px; margin:1em auto",
-                Title("Databinding"),
-                child.text <-- personVar.signal.map(p => s"\${p.render}")
-              )
-            case false => div()
-        )
-      ),
+      debugUI(debugVar, personVar),
       div(
         styleAttr := "clear:both;max-width: fit-content; margin:1em auto",
         Button(
@@ -67,7 +49,7 @@ object SignupPage:
             // scalafmt:off
 
             PersonEndpoint
-              .createEndpoint(personVar.now())
+              .create(personVar.now())
               .emitTo(userBus, errorBus)
 
             // scalafmt:on
@@ -75,6 +57,43 @@ object SignupPage:
           }
         )
       ),
+      renderToast(userBus, errorBus)
+    )
+
+  
+  def renderUser(user: User) =
+    div(
+      h2("User"),
+      div(s"Id: \${user.id}"),
+      div(s"Name: \${user.name}"),
+      div(s"Age: \${user.age}"),
+      div(s"Creation Date: \${user.creationDate}")
+    )
+
+  def debugUI(debugVar: Var[Boolean], personVar: Var[Person]) =
+    div(
+      styleAttr := "float: right;",
+      Switch(
+        _.textOn  := "🔎",
+        _.textOff := "🔎",
+        _.tooltip := "On/Off Switch",
+        onChange.mapToChecked --> debugVar
+      ),
+      div(
+        styleAttr := "float: both;",
+        child <-- debugVar.signal.map:
+          case true =>
+            div(
+              styleAttr := "max-width: 300px; margin:1em auto",
+              Title("Databinding"),
+              child.text <-- personVar.signal.map(_.render)
+            )
+          case false => div()
+      )
+    )
+
+  def renderToast(userBus: EventBus[User], errorBus: EventBus[Throwable]) =
+    Seq(
       Toast(
         cls := "srf-valid",
         _.duration  := 2.seconds,
@@ -89,13 +108,4 @@ object SignupPage:
         child <-- errorBus.events.map(_.getMessage()),
         _.open <-- errorBus.events.map(_ => true)
       )
-    )
-
-  def renderUser(user: User) =
-    div(
-      h2("User"),
-      div(s"Id: \${user.id}"),
-      div(s"Name: \${user.name}"),
-      div(s"Age: \${user.age}"),
-      div(s"Creation Date: \${user.creationDate}")
     )
