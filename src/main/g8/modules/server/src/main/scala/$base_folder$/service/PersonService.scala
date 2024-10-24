@@ -45,9 +45,7 @@ class PersonServiceLive private (
       tx(
         for {
           _ <- ZIO.logDebug(s"Registering user: \$person")
-          newPetEntity = person.pet match
-                           case Right(value) => PetEntity(value)
-                           case Left(value)  => PetEntity(value)
+          newPetEntity = person.pet.fold(PetEntity.apply, PetEntity.apply)
           petEntity <- petRepository.create(newPetEntity)
           user <- userRepository
                     .create(
@@ -84,24 +82,27 @@ class PersonServiceLive private (
                       .findByEmail(userId.email)
                       .someOrFail(UserNotFoundException(userId.email))
       user = userEntity.into[User].transform
-      pet <- if (withPet)
-               (userEntity.petType, userEntity.petId) match {
-                 case (Some(petType), Some(petId)) =>
-                   petType match
-                     case PetType.Cat =>
-                       petRepository
-                         .getCatById(petId)
-                         .mapOption[Cat]
-
-                     case PetType.Dog =>
-                       petRepository
-                         .getDogById(petId)
-                         .mapOption[Dog]
-
-                 case _ => ZIO.none
-               }
-             else ZIO.none
+      pet <- maybePet(userEntity, withPet)
     yield (user, pet)
+
+  private def maybePet(userEntity: UserEntity, withPet: Boolean): Task[Option[Pet]] =
+    if withPet then
+      (userEntity.petType, userEntity.petId) match {
+        case (Some(petType), Some(petId)) =>
+          petType match
+            case PetType.Cat =>
+              petRepository
+                .getCatById(petId)
+                .mapOption[Cat]
+
+            case PetType.Dog =>
+              petRepository
+                .getDogById(petId)
+                .mapOption[Dog]
+
+        case _ => ZIO.none
+      }
+    else ZIO.none
 
 }
 

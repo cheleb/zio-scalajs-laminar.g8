@@ -15,7 +15,7 @@ object Router:
       linkHandler,
       routes(
         div(
-          cls := "container-fluid",
+          styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
           // potentially children
           (pathEnd | path("public") | path("public" / "index.html")) {
             HomePage()

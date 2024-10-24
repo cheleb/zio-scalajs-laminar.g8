@@ -27,10 +27,9 @@ object SignupPage:
     val debugVar = Var(false)
 
     div(
-      styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
       h1("Signup"),
       div(
-        styleAttr := "width: 600px; float: left;",
+        styleAttr := "float: left;",
         //
         // The form is generated from the case class
         //
@@ -41,7 +40,7 @@ object SignupPage:
       ),
       debugUI(debugVar, personVar),
       div(
-        styleAttr := "clear:both;max-width: fit-content; margin:1em auto",
+        styleAttr := "max-width: fit-content; margin:1em auto",
         Button(
           "Create",
           disabled <-- personVar.signal.map(_.errorMessages.nonEmpty),
