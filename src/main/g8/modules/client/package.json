@@ -1,5 +1,5 @@
 {
-  "name": "laminar-form-derivation",
+  "name": "$projectId$",
   "private": true,
   "version": "0.0.1",
   "main": "index.js",
@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@ui5/webcomponents": "2.1.0",
-    "@ui5/webcomponents-fiori": "2.10",
+    "@ui5/webcomponents-fiori": "2.1.0",
     "@ui5/webcomponents-icons": "2.1.0",
     "chart.js": "2.9.4"
   },
