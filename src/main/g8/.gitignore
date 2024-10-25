@@ -5,3 +5,8 @@ dist/
 .bloop/
 .bsp/
 .metals/
+# Ignore this file
+# Doing so will all to publish the project
+# Locally: sbt publishLocal or sbt Docker/publishLocal
+# The CI will use the tag to publish the image
+version.sbt

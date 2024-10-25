@@ -16,7 +16,7 @@ import $package$.repositories.*
 
 object HttpServer extends ZIOAppDefault {
 
-  private val webJarRoutes = staticResourcesGetServerEndpoint[Task]("public")(
+  private val webJarRoutes = staticResourcesGetServerEndpoint[Task]("$public$")(
     this.getClass.getClassLoader,
     "public"
   )
@@ -70,5 +70,6 @@ object HttpServer extends ZIOAppDefault {
         UserRepositoryLive.layer,
         PetRepositoryLive.layer,
         Repository.dataLayer
+        //,ZLayer.Debug.mermaid
       )
 }

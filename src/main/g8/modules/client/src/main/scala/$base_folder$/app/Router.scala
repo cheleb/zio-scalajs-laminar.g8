@@ -8,8 +8,10 @@ import org.scalajs.dom
 import $package$.app.demos.*
 
 object Router:
-  private val externalUrlBus = EventBus[String]()
-  val writer                 = externalUrlBus.writer
+  val uiBase                     = "$public$"
+  def uiRoute(segments: String*) = segments.mkString(s"/\$uiBase/", "/", "")
+  private val externalUrlBus     = EventBus[String]()
+  val writer                     = externalUrlBus.writer
   def apply() =
     mainTag(
       linkHandler,
@@ -17,20 +19,25 @@ object Router:
         div(
           styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
           // potentially children
-          (pathEnd | path("public") | path("public" / "index.html")) {
-            HomePage()
+
+          pathPrefix(uiBase) {
+            firstMatch(
+              (pathEnd | path("index.html")) {
+                HomePage()
+              },
+              path("signup") {
+                signup.SignupPage()
+              },
+              path("profile") {
+                profile.ProfilePage()
+              }
+            )
           },
           $if(scalablytyped.truthy)$
           path("demos" / "scalablytyped") {
             scalablytyped.ScalablytypedDemoPage()
           },
           $endif$
-          path("signup") {
-            signup.SignupPage()
-          },
-          path("profile") {
-            profile.ProfilePage()
-          },
           noneMatched {
             div("404 Not Found")
           }

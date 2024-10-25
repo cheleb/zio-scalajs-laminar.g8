@@ -1,4 +1,3 @@
-import java.nio.charset.StandardCharsets
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 import Dependencies._
@@ -34,6 +33,9 @@ lazy val generator = project
   .enablePlugins(SbtTwirl)
   .disablePlugins(RevolverPlugin)
   .settings(staticFilesGeneratorDependencies)
+  .settings(
+    publish / skip := true
+  )
 
 // Aggregate root project
 // This is the root project that aggregates all other projects
@@ -130,7 +132,7 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   )
   .jsSettings(
     libraryDependencies ++= Seq(
-      "io.github.cquiroz" %%% "scala-java-time" % "2.5.0" // implementations of java.time classes for Scala.JS,
+      "io.github.cquiroz" %%% "scala-java-time" % "2.6.0" // implementations of java.time classes for Scala.JS,
     )
   )
   .settings(
@@ -165,6 +167,8 @@ def scalajsProject(projectId: String): Project =
 //
 Global / onLoad := {
 
+  insureBuildEnvFile(baseDirectory.value, (client / scalaVersion).value)
+
   // This is hack to share static files between server and client.
   // It creates symlinks from server to client static files
   // Ideally, we should use a shared folder for static files
@@ -174,16 +178,5 @@ Global / onLoad := {
   symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
   symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
 
-  val scalaVersionValue = (client / scalaVersion).value
-  val outputFile =
-    target.value / "build-env.sh"
-    IO.writeLines(
-      outputFile,
-      s"""  
-         |# Generated file see build.sbt
-         |SCALA_VERSION="\$scalaVersionValue"
-         |""".stripMargin.split("\n").toList,
-      StandardCharsets.UTF_8
-    )
   (Global / onLoad).value
 }

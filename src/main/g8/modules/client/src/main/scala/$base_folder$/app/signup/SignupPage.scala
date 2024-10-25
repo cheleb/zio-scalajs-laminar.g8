@@ -59,7 +59,6 @@ object SignupPage:
       renderToast(userBus, errorBus)
     )
 
-  
   def renderUser(user: User) =
     div(
       h2("User"),

@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+    environment:
+      - "POSTGRES_USER=docker"
+      - "POSTGRES_PASSWORD=docker"
+    ports:
+      - "5432:5432"
+    command: ["postgres", "-c", "log_statement=all"]
+
+  web:
+     image: johndoe/$projectId$
+
+     links:
+       - db
+     depends_on:
+      - db
+     ports:
+        - "8080:8080"
+     environment:
+      - "DATABASE_JDBC_URL=jdbc:postgresql://db:5432/docker"
