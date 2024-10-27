@@ -176,7 +176,7 @@ $endif$
     }
 
     val versionFile = baseDirectory / "version.sbt"
-    if(!versionFile.exists()) {
+    if (!versionFile.exists()) {
       IO.write(versionFile, s"""ThisBuild / version := "$version$"""")
     }
 
@@ -191,10 +191,10 @@ $endif$
       Docker / maintainer     := "Joh doe",
       Docker / dockerUsername := Some("johndoe"),
       Docker / packageName    := "$projectId$",
-      dockerBaseImage := "azul/zulu-openjdk-alpine:23-latest",
-//      dockerRepository   := Some("localhost:5000"),
-      dockerUpdateLatest := true,
-      dockerExposedPorts := Seq(8000)
+      dockerBaseImage         := "azul/zulu-openjdk-alpine:23-latest",
+      dockerRepository        := Some("$dockerRegistry$"),
+      dockerUpdateLatest      := true,
+      dockerExposedPorts      := Seq(8000)
     )
   }
 
