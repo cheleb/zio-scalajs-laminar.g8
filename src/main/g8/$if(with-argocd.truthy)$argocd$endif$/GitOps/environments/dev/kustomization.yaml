@@ -1,0 +1,5 @@
+images:
+  - name: registry.orb.local/$dockerRepo$/$projectId$
+    newTag: $version$
+resources:
+  - "../../app"

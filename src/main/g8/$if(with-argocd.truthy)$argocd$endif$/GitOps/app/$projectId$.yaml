@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $projectId$-deployment
+spec:
+  selector:
+    matchLabels:
+      app: $projectId$
+  template:
+    metadata:
+      labels:
+        app: $projectId$
+    spec:
+      containers:
+        - name: $projectId$
+          image: registry.orb.local/$dockerRepo$/$projectId$
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DATABASE_JDBC_URL
+              value: "jdbc:postgresql://postgresql-svc:5432/$k8sDBName$"
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: POSTGRES_PASSWORD

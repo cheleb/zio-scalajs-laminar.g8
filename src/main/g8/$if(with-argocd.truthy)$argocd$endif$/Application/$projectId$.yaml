@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: $projectId$-app
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: cal=registry.orb.local/$dockerRepo$/$projectId$
+    argocd-image-updater.argoproj.io/cal.update-strategy: semver
+    argocd-image-updater.argoproj.io/currency.update-strategy: semver
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
+    argocd-image-updater.argoproj.io/write-back-target: "kustomization:../../environments/dev"
+
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:$githubUser$/$projectId$-gitops.git
+    targetRevision: $gitOpsTargetRevision$
+    path: environments/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $k8sNamespace$
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - PrunePropagationPolicy=Foreground
+      - PruneLast=true

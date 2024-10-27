@@ -177,7 +177,7 @@ $endif$
 
     val versionFile = baseDirectory / "version.sbt"
     if(!versionFile.exists()) {
-      IO.write(versionFile, s"""ThisBuild / version := "0.0.1"""")
+      IO.write(versionFile, s"""ThisBuild / version := "$version$"""")
     }
 
 
