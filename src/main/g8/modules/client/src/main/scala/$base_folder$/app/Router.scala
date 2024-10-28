@@ -30,12 +30,11 @@ object Router:
               },
               path("profile") {
                 profile.ProfilePage()
+              }$if(scalablytyped.truthy)$,
+              path("demos" / "scalablytyped") {
+                scalablytyped.ScalablytypedDemoPage()
               }
             )
-          },
-          $if(scalablytyped.truthy)$
-          path("demos" / "scalablytyped") {
-            scalablytyped.ScalablytypedDemoPage()
           },
           $endif$
           noneMatched {

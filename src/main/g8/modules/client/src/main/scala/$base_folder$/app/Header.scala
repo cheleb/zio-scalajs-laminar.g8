@@ -86,7 +86,9 @@ object Header:
         .amend(
           onClick.mapTo(false) --> openPopoverBus
         ),
-      _.item(_.icon := IconName.`sys-help`, "Help"),
+ $if(scalablytyped.truthy)$        
+      _.item(_.icon := IconName.`bar-chart`, a("Statistics", href := Router.uiRoute("demos/scalablytyped"))),
+ $endif$
       _.item(_.icon := IconName.log, "Sign out").amend(
         onClick --> { _ =>
           session.clearUserState()

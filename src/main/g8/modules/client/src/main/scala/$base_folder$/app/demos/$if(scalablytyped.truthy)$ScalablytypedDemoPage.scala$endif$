@@ -22,7 +22,7 @@ object ScalablytypedDemoPage {
 
   def apply(): HtmlElement =
     div(
-      h1("Hello ScalaJS Polytechooo !"),
+      h1("Hello ScalaJS ScalablyTyped !"),
       renderDataTable(),
       ul(
         li("Sum of values: ", child.text <-- allValues.map(_.sum)),
