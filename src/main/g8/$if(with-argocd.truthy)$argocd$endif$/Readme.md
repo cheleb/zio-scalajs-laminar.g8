@@ -69,7 +69,12 @@ ArgoCD Image Updater is a tool that automatically updates the container images i
 
 You can deploy the application by running the following commands:
 
-1. Add private key to the Kubernetes secret:
+1. Add private key to the Kubernetes secret
+
+Copy `secrets-template.yaml` to `secrets.yaml` and add the private key to the `privateKey` field.
+
+Apply the secret to the Kubernetes cluster:
+
 ```bash
 kubectl apply -f secrets.yaml
 ```
