@@ -14,7 +14,7 @@
     "@ui5/webcomponents": "2.1.0",
     "@ui5/webcomponents-fiori": "2.1.0",
     "@ui5/webcomponents-icons": "2.1.0",
-    "chart.js": "2.9.4"
+    "chart.js": "$chartjs_version$"
   },
   "devDependencies": {
     "@scala-js/vite-plugin-scalajs": "^1.0.0",

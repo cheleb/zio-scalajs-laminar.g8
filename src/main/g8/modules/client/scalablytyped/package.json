@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
-    "chart.js": "2.9.4"
+    "chart.js": "$chartjs_version$"
   },
   "devDependencies": {
     "typescript": "5.6.3",
-    "@types/chart.js": "2.9.29"
+    "@types/chart.js": "$chartts_version$"
   }
 }
