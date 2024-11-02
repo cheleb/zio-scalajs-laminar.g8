@@ -66,7 +66,8 @@ lazy val server = project
   )
   .settings(
     fork := true,
-    serverLibraryDependencies
+    serverLibraryDependencies,
+    testingLibraryDependencies
   )
   .settings(serverSettings(client): _*)
   .dependsOn(sharedJvm)

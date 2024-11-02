@@ -59,6 +59,14 @@ object Dependencies {
       quillDependencies ++
       jwtDependencies
 
+  val testingLibraryDependencies =
+    libraryDependencies ++= Seq(
+      "org.scalameta" %% "munit"        % "1.0.0"      % Test,
+      "dev.zio"       %% "zio-test"     % Versions.zio % Test,
+      "dev.zio"       %% "zio-test-sbt" % Versions.zio % Test
+    )
+    
+
   val sharedJvmAndJsLibraryDependencies: Setting[Seq[ModuleID]] =
     libraryDependencies ++= Seq(
       "com.softwaremill.sttp.tapir" %%% "tapir-iron"                     % Versions.tapir,
