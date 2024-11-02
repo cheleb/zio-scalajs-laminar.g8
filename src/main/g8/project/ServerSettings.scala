@@ -108,7 +108,7 @@ $if(scalablytyped.truthy)$
           "@types/chart.js" -> "$chartts_version$"
         ),
       $endif$
-        webpack / version      := "5.91.0",
+        webpack / version      := "$webpack_version$",
         scalaJSStage in Global := FullOptStage,
         webpackBundlingMode    := BundlingMode.LibraryAndApplication()
       )
