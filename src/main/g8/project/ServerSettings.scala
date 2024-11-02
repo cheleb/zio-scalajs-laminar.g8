@@ -104,8 +104,8 @@ $if(scalablytyped.truthy)$
       Seq(
       $if(scalablytyped.truthy)$
         Compile / npmDependencies ++= Seq(
-          "chart.js"        -> "2.9.4",
-          "@types/chart.js" -> "2.9.29"
+          "chart.js"        -> "$chartjs_version$",
+          "@types/chart.js" -> "$chartts_version$"
         ),
       $endif$
         webpack / version      := "5.91.0",
