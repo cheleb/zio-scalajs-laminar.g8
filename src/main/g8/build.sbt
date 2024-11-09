@@ -7,7 +7,7 @@ import Dependencies._
 // - demo: demo mode (default)
 // - dev:  development mode
 //
-import ServerSettings._
+import DeploymentSettings._
 
 val scala3 = "$scala_version$"
 
@@ -113,7 +113,7 @@ lazy val client = scalajsProject("client")
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(clientLibraryDependencies)
   .settings(
-    scalaJsSettings
+    scalablytypedSettings
   )
   .dependsOn(sharedJs)
   .settings(

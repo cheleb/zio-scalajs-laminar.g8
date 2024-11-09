@@ -24,7 +24,7 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 
 import webscalajs.WebScalaJS.autoImport._
 
-object ServerSettings {
+object DeploymentSettings {
 //
 // Define the build mode:
 // - prod: production mode
@@ -102,25 +102,19 @@ $if(scalablytyped.truthy)$
   val scalaJsSettings = mode match {
     case "prod" =>
       Seq(
-      $if(scalablytyped.truthy)$
         Compile / npmDependencies ++= Seq(
           "chart.js"        -> "$chartjs_version$",
           "@types/chart.js" -> "$chartts_version$"
         ),
-      $endif$
         webpack / version      := "$webpack_version$",
         scalaJSStage in Global := FullOptStage,
         webpackBundlingMode    := BundlingMode.LibraryAndApplication()
       )
     case _ =>
-      $if(scalablytyped.truthy)$
       Seq(externalNpm := {
         // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
         baseDirectory.value / "scalablytyped"
       })
-      $else$
-      Seq()
-      $endif$
   }
 $endif$
 
