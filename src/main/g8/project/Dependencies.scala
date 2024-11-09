@@ -10,6 +10,7 @@ object Dependencies {
     val iron                  = "2.6.0"
     val javaMail              = "1.6.2"
     val laminarFormDerivation = "0.16.1"
+    val mUnit                 = "1.0.2"
     val osLib                 = "0.10.2"
     val postgresql            = "42.7.4"
     val quill                 = "4.8.5"
@@ -61,9 +62,9 @@ object Dependencies {
 
   val testingLibraryDependencies =
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit"        % "1.0.0"      % Test,
-      "dev.zio"       %% "zio-test"     % Versions.zio % Test,
-      "dev.zio"       %% "zio-test-sbt" % Versions.zio % Test
+      "org.scalameta" %% "munit"        % Versions.mUnit % Test,
+      "dev.zio"       %% "zio-test"     % Versions.zio   % Test,
+      "dev.zio"       %% "zio-test-sbt" % Versions.zio   % Test
     )
     
 
