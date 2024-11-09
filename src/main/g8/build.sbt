@@ -3,7 +3,7 @@ import org.scalajs.linker.interface.ModuleSplitStyle
 import Dependencies._
 //
 // Will handle different build modes:
-// - prod: production mode
+// - prod: production mode, aka with BFF and webjar deployment
 // - demo: demo mode (default)
 // - dev:  development mode
 //
@@ -175,9 +175,7 @@ Global / onLoad := {
   // Ideally, we should use a shared folder for static files
   // Or use a shared CDN
   // Or copy the files to the target directory of the server at build time.
-
   symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
   symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
-
   (Global / onLoad).value
 }

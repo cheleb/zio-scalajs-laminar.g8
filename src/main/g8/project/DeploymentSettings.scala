@@ -27,7 +27,7 @@ import webscalajs.WebScalaJS.autoImport._
 object DeploymentSettings {
 //
 // Define the build mode:
-// - prod: production mode
+// - prod: production mode, aka with BFF and webjar deployment
 //         optimized, CommonJSModule
 //         webjar packaging
 // - demo: demo mode (default)
@@ -99,7 +99,7 @@ $if(scalablytyped.truthy)$
     case _      => ScalablyTypedConverterExternalNpmPlugin
   }
   
-  val scalaJsSettings = mode match {
+  val scalablytypedSettings = mode match {
     case "prod" =>
       Seq(
         Compile / npmDependencies ++= Seq(
