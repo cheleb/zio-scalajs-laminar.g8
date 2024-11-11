@@ -32,8 +32,8 @@ object Header:
           Icon(_.name := IconName.home, cls := "pad-10"),
           href := Router.uiRoute()
         ),
-        _.primaryTitle       := "ZIO Laminar Demo",
-        _.secondaryTitle     := "And Tapir, UI5, and more",
+        _.primaryTitle       := "$name$",
+        _.secondaryTitle     := "$short-description$",
         _.notificationsCount := "2+",
         _.showNotifications  := true,
         _.showCoPilot        := true,
