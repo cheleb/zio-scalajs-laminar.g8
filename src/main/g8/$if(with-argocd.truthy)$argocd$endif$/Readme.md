@@ -11,8 +11,28 @@ The ArgoCD server requires a key pair to authenticate with the Git repository. Y
 Hence it might be a good idea to generate a new key pair for the ArgoCD server...
 
 ```bash
-ssh-keygen -t ed25519 -C "argocd@argocd"
+ssh-keygen -t ed25519 -C "argocd$projectId$" -f ~/.ssh/argocd_$projectId$_ed25519
 ```
+
+## Publish the application GitOps to the GitHub
+
+The [GitOps](GitOps/) folder contains the ArgoCD application configuration. You can publish this folder to a GitHub repository by running the following commands:
+
+1. Create a new repository in GitHub.
+```bash
+cd GitOps
+gh repo create $githubUser$/$projectId$-gitops --private
+git remote add origin git@github.com:$githubUser$/$projectId$-gitops.git
+```
+    
+3. Push the GitOps folder to the repository.
+```bash
+git push -u origin master
+```
+
+2. Add public key to the repository settings.
+
+
 
 ## Declare the GitHub repository in ArgoCD
 
@@ -22,7 +42,7 @@ argocd login argocd-server.argocd.svc.cluster.local
 ```
 2. Add the repository credential to ArgoCD:
 ```bash
-argocd repocreds add git@github.com:$githubUser$/$projectId$-gitops.git --ssh-private-key-path ~/.ssh/argocd_ed25519
+argocd repocreds add git@github.com:$githubUser$/$projectId$-gitops.git --ssh-private-key-path ~/.ssh/argocd_$projectId$_ed25519
 ```
 
 3. Add the repository to ArgoCD:
@@ -37,23 +57,6 @@ Or in the CLI:
 argocd repo list
 ```
 
-## Publish the application GitOps to the GitHub
-
-The [GitOps](GitOps/) folder contains the ArgoCD application configuration. You can publish this folder to a GitHub repository by running the following commands:
-
-1. Create a new repository in GitHub.
-```bash
-cd GitOps
-gh repo create $projectId$-gitops --private
-git remote add origin git@github.com:$githubUser$/$projectId$-gitops.git
-```
-    
-3. Push the GitOps folder to the repository.
-```bash
-git push -u origin master
-```
-
-2. Add public key to the repository settings.
 
 
 ## Deploy the application
@@ -81,5 +84,11 @@ kubectl apply -f secrets.yaml
 2. Deploy the application
 
 ```bash
-kubectl apply -f zio-laminar-demo-k8s.yaml
+kubectl apply -f $projectId$.yaml
+```
+
+3. Create secret for the postgres password
+
+```bash
+kubectl -n $k8sNamespace$  create secret generic postgresql-secrets --from-literal=POSTGRES_PASSWORD=*************
 ```

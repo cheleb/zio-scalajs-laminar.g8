@@ -3,7 +3,7 @@ package $package$.app
 import dev.cheleb.scalamigen.*
 import dev.cheleb.scalamigen.ui5.UI5WidgetFactory
 
-import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziotapir.laminar.*
 
 import $package$.domain.*
 

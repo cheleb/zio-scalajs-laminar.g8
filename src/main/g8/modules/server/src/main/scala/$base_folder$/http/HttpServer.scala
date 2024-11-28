@@ -39,16 +39,16 @@ object HttpServer extends ZIOAppDefault {
 
   private val server =
     for {
-      _            <- Console.printLine("Starting server...")
-      apiEndpoints <- HttpApi.endpointsZIO
+      _                               <- Console.printLine("Starting server...")
+      (apiEndpoints, streamEndpoints) <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
-                       .fromServerEndpoints(apiEndpoints, "zio-laminar-demo", "1.0.0")
+                       .fromServerEndpoints(apiEndpoints, "$projectId$", "1.0.0")
       _ <- Server.serve(
              Routes(
                Method.GET / Root -> handler(Response.redirect(url"public/index.html"))
              ) ++
                ZioHttpInterpreter(serverOptions)
-                 .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
+                 .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: streamEndpoints ::: docEndpoints)
            )
     } yield ()
 

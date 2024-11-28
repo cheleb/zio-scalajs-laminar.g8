@@ -3,7 +3,7 @@ package $package$.http.endpoints
 import sttp.tapir.*
 import zio.*
 
-trait HealthEndpoint {
+object HealthEndpoint {
   val healthEndpoint = endpoint
     .tag("health")
     .name("health")

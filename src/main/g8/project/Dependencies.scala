@@ -9,7 +9,7 @@ object Dependencies {
     val frontroute            = "0.19.0"
     val iron                  = "2.6.0"
     val javaMail              = "1.6.2"
-    val laminarFormDerivation = "0.16.2"
+    val laminarFormDerivation = "0.16.3"
     val mUnit                 = "1.0.2"
     val osLib                 = "0.10.2"
     val postgresql            = "42.7.4"
@@ -21,9 +21,9 @@ object Dependencies {
     val tapir                 = "1.11.5"
     val zio                   = "2.1.11"
     val zioConfig             = "4.0.2"
-    val zioLaminarTapir       = "0.4.0"
+    val zioLaminarTapir       = "0.6.0"
     val zioLogging            = "2.2.4"
-    val zioPrelude            = "1.0.0-RC32"
+    val zioPrelude            = "1.0.0-RC34"
   }
 
   private val configDependencies = Seq(
@@ -52,7 +52,7 @@ object Dependencies {
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
-      "dev.cheleb"                  %% "zio-jwt-server"           % Versions.zioLaminarTapir,
+      "dev.cheleb"                  %% "zio-tapir-server"         % Versions.zioLaminarTapir,
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
       configDependencies ++
@@ -73,7 +73,7 @@ object Dependencies {
       "com.softwaremill.sttp.tapir" %%% "tapir-iron"                     % Versions.tapir,
       "com.softwaremill.sttp.tapir" %%% "tapir-json-zio"                 % Versions.tapir,
       "dev.cheleb"                  %%% "laminar-form-derivation-shared" % Versions.laminarFormDerivation,
-      "dev.cheleb"                  %%% "zio-jwt"                        % Versions.zioLaminarTapir,
+      "dev.cheleb"                  %%% "zio-tapir-shared"               % Versions.zioLaminarTapir,
       "dev.zio"                     %%% "zio-prelude"                    % Versions.zioPrelude,
       "dev.zio"                     %%% "zio-prelude-magnolia"           % Versions.zioPrelude,
       "io.github.iltotore"           %% "iron-zio-json"                  % Versions.iron
@@ -84,7 +84,7 @@ object Dependencies {
       // pull laminar 17.1.0
       "dev.cheleb" %%% "laminar-form-derivation-ui5" % Versions.laminarFormDerivation,
       // pull tapir-sttp-client and zio-tapir
-      "dev.cheleb"    %%% "zio-laminar-tapir" % Versions.zioLaminarTapir,
+      "dev.cheleb"    %%% "zio-tapir-laminar" % Versions.zioLaminarTapir,
       "io.frontroute" %%% "frontroute"        % Versions.frontroute
     )
 

@@ -6,7 +6,7 @@ import $package$.app.given
 import $package$.domain.*
 import $package$.http.endpoints.PersonEndpoint
 
-import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziotapir.laminar.*
 
 object ProfilePage:
 

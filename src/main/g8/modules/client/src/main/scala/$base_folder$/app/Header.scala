@@ -5,7 +5,7 @@ import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
 
 import dev.cheleb.scalamigen.*
-import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziotapir.laminar.*
 
 import $package$.login.LoginPassword
 import $package$.http.endpoints.PersonEndpoint
@@ -86,7 +86,7 @@ object Header:
         .amend(
           onClick.mapTo(false) --> openPopoverBus
         ),
- $if(scalablytyped.truthy)$        
+ $if(scalablytyped.truthy)$
       _.item(_.icon := IconName.`bar-chart`, a("Statistics", href := Router.uiRoute("demos/scalablytyped"))),
  $endif$
       _.item(_.icon := IconName.log, "Sign out").amend(
@@ -100,6 +100,6 @@ object Header:
   def loginHandler(session: Session[UserToken]): Observer[Any] = Observer[Any] { _ =>
     PersonEndpoint
       .login(credentials.now())
-      .map(token => session.saveToken(SameOriginBackendClientLive.backendBaseURL, token))
+      .map(token => session.saveToken(token))
       .emitTo(loginSuccessEventBus, loginErrorEventBus)
   }

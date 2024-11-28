@@ -8,7 +8,7 @@ import be.doeraene.webcomponents.ui5.configkeys.ToastPlacement
 import com.raquo.laminar.api.L.*
 
 import dev.cheleb.scalamigen.*
-import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziotapir.laminar.*
 
 import scala.concurrent.duration.DurationInt
 
