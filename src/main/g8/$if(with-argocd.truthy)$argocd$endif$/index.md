@@ -2,36 +2,31 @@
 
 To deploy the application using ArgoCD, you need to install ArgoCD in your Kubernetes cluster. You can follow the instructions in the [ArgoCD documentation](https://argoproj.github.io/argo-cd/getting_started/).
 
-After installing ArgoCD, you can deploy the application by running the following commands.
+Or you can follow dedicated instructions for the [ArgoCD](argocd.md) in this project.
+
+After installing ArgoCD, you can deploy the application by running the following steps.
 
 ## Key Pair
 
-The ArgoCD server requires a key pair to authenticate with the Git repository. You should generate a new key pair and add the public key to the GitHub repository and expose the private key to the ArgoCD server.
+The ArgoCD server requires a key pair to authenticate to the Git repository, that will hold your project helm/kustomize file.
 
-Hence it might be a good idea to generate a new key pair for the ArgoCD server...
+* your project can be private ..
+* ArgoCD image will push the updated helm/kustomize file to the repository, when a new image is pushed to the registry.
+
+Hence, you should generate a new key pair and add the public key to the GitHub repository and expose the private key to the ArgoCD server.
+
+* The private key should be added to the ArgoCD server.
+* The public key should be added to the GitHub repository.
+
+For some reason, the public key used this way cannot be reused, hence it might be a good idea to generate a new key pair for the ArgoCD server and the GitHub repository.
 
 ```bash
 ssh-keygen -t ed25519 -C "argocd$projectId$" -f ~/.ssh/argocd_$projectId$_ed25519
 ```
 
-## Publish the application GitOps to the GitHub
+Then you need to publish the [GitOps folder to the GitHub repository](./gitops.md).
 
-The [GitOps](GitOps/) folder contains the ArgoCD application configuration. You can publish this folder to a GitHub repository by running the following commands:
-
-1. Create a new repository in GitHub.
-```bash
-cd GitOps
-gh repo create $githubUser$/$projectId$-gitops --private
-git remote add origin git@github.com:$githubUser$/$projectId$-gitops.git
-```
-    
-3. Push the GitOps folder to the repository.
-```bash
-git push -u origin master
-```
-
-2. Add public key to the repository settings.
-
+When done you can add the repository to the ArgoCD server.
 
 
 ## Declare the GitHub repository in ArgoCD
@@ -81,14 +76,26 @@ Apply the secret to the Kubernetes cluster:
 ```bash
 kubectl apply -f secrets.yaml
 ```
-2. Deploy the application
+
+2. Optional: Init namespace && Password
+
+```bash
+kubectl create namespace $k8sNamespace$
+kubectl -n $k8sNamespace$  create secret generic postgresql-secrets --from-literal=POSTGRES_PASSWORD=*************
+```
+
+3. Deploy the application
 
 ```bash
 kubectl apply -f $projectId$.yaml
 ```
 
-3. Create secret for the postgres password
+Note that the application will be deployed in the namespace `$k8sNamespace$`.
 
+3. Optional: Create secret for the postgres password
+
+If you did not did it the the step 2, you can create the secret for the postgres password by running the following command:
 ```bash
 kubectl -n $k8sNamespace$  create secret generic postgresql-secrets --from-literal=POSTGRES_PASSWORD=*************
 ```
+Until the secret is created, the application will not be able to start.

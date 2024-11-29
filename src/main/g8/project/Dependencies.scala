@@ -9,7 +9,7 @@ object Dependencies {
     val frontroute            = "0.19.0"
     val iron                  = "2.6.0"
     val javaMail              = "1.6.2"
-    val laminarFormDerivation = "0.16.3"
+    val laminarFormDerivation = "0.17.0"
     val mUnit                 = "1.0.2"
     val osLib                 = "0.10.2"
     val postgresql            = "42.7.4"
