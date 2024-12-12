@@ -29,12 +29,11 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     } yield token
   }
 
-  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => withPet =>
+  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.zServerAuthenticatedLogic { userId => withPet =>
     personService.getProfile(userId, withPet)
   }
   
-  val routes: (List[ServerEndpoint[Any, Task]], List[ZServerEndpoint[Any, ZioStreams]]) =
-    (List(create, login, profile), List.empty)
+  override val routes: List[ServerEndpoint[Any, Task]] =List(create, login, profile)
 }
 
 object PersonController {

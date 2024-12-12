@@ -39,8 +39,8 @@ object HttpServer extends ZIOAppDefault {
 
   private val server =
     for {
-      _                               <- Console.printLine("Starting server...")
-      (apiEndpoints, streamEndpoints) <- HttpApi.endpointsZIO
+      _            <- Console.printLine("Starting server...")
+      apiEndpoints <- HttpApi.endpoints
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(apiEndpoints, "$projectId$", "1.0.0")
       _ <- Server.serve(
@@ -48,7 +48,7 @@ object HttpServer extends ZIOAppDefault {
                Method.GET / Root -> handler(Response.redirect(url"public/index.html"))
              ) ++
                ZioHttpInterpreter(serverOptions)
-                 .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: streamEndpoints ::: docEndpoints)
+                 .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
            )
     } yield ()
 
@@ -70,6 +70,6 @@ object HttpServer extends ZIOAppDefault {
         UserRepositoryLive.layer,
         PetRepositoryLive.layer,
         Repository.dataLayer
-        //,ZLayer.Debug.mermaid
+        // ,ZLayer.Debug.mermaid
       )
 }
