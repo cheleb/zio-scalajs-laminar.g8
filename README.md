@@ -10,20 +10,34 @@ This is a g8 scafolding of a full Scala stack web application.
 * Docker daemon up.
 * SBT
 * node
+* vscode && metals (Scala Support)
 
 In general I work with last version :D
 
 ## Usage
 
+### Setup
 ```bash
 sbt new cheleb/zio-scalajs-laminar.g8 --name=my-project 
 ```
+
+Read the readme ;)
+
 
 If you want to deploy your project with ArgoCD, you can use the following command:
 
 ```bash
 sbt new cheleb/zio-scalajs-laminar.g8 --name=my-project --with-argocd=true --githubUser=YOUR_GITHUB_USER
 ```
+
+### Go to work
+
+```bash
+code my-project 
+```
+
+Import the project in VSCode, wait ... all the setup should be done for you.
+
 
 
 
