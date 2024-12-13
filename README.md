@@ -5,6 +5,13 @@ This is a g8 scafolding of a full Scala stack web application.
 * ScalaJS for the frontend
 * ZIO for the backend
 
+## Prerequisite
+
+* Docker daemon up.
+* SBT
+* node
+
+In general I work with last version :D
 
 ## Usage
 
