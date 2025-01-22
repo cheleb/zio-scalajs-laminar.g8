@@ -27,10 +27,10 @@ import webscalajs.WebScalaJS.autoImport._
 object DeploymentSettings {
 //
 // Define the build mode:
-// - prod: production mode, aka with BFF and webjar deployment
+// - CommonJs: production mode, aka with BFF and webjar deployment
 //         optimized, CommonJSModule
 //         webjar packaging
-// - demo: demo mode (default)
+// - ESModule: demo mode (default)
 //         optimized, CommonJSModule
 //         static files
 // - dev:  development mode
@@ -41,44 +41,53 @@ object DeploymentSettings {
 //   (see vite.config.js)
   val mode = sys.env.get("MOD").getOrElse("demo")
 
+  val overrideDockerRegistry = sys.env.get("LOCAL_DOCKER_REGISTRY").isDefined
+
+  val publicFolder = "public"
+
 //
 // On dev mode, server will only serve API and static files.
 //
   val serverPlugins = mode match {
-    case "prod" =>
+    case "CommonJs" =>
       Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin, DockerPlugin, AshScriptPlugin)
+    case "ESModule" =>
+      Seq(SbtTwirl, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
     case _ => Seq()
   }
 
   def scalaJSModule = mode match {
-    case "prod" => ModuleKind.CommonJSModule
-    case _      => ModuleKind.ESModule
+    case "CommonJs" => ModuleKind.CommonJSModule
+    case _          => ModuleKind.ESModule
   }
 
   def serverSettings(clientProjects: Project*) = mode match {
-    case "prod" =>
+    case "CommonJs" =>
       Seq(
         Compile / compile              := ((Compile / compile) dependsOn scalaJSPipeline).value,
-        Assets / WebKeys.packagePrefix := "public/",
+        Assets / WebKeys.packagePrefix := s"$publicFolder/",
         Runtime / managedClasspath += (Assets / packageBin).value,
         scalaJSProjects         := clientProjects,
         Assets / pipelineStages := Seq(scalaJSPipeline)
       ) ++ dockerSettings
-    case _ => Seq()
+    case "ESModule" => dockerSettings
+    case _          => Seq()
   }
 
-  def staticGenerationSettings(generator: Project) =
-    if (mode == "prod")
+  def staticGenerationSettings(generator: Project, client: Project) = mode match {
+    case "CommonJs" =>
       Seq(
         Assets / resourceGenerators += Def
           .taskDyn[Seq[File]] {
-            val rootFolder = (Assets / resourceManaged).value / "public"
+            val rootFolder = (Assets / resourceManaged).value / publicFolder
             rootFolder.mkdirs()
             (generator / Compile / runMain).toTask {
               Seq(
                 "samples.BuildIndex",
                 "--title",
-                s""""\${name.value} v \${version.value}"""",
+                s""""\${name.value} v2 \${version.value}"""",
+                "--version",
+                version.value,
                 "--resource-managed",
                 rootFolder
               ).mkString(" ", " ", "")
@@ -87,20 +96,49 @@ object DeploymentSettings {
           }
           .taskValue
       )
-    else
+    case "ESModule" =>
+      Seq(
+        (Compile / resourceGenerators) += Def
+          .taskDyn[Seq[File]] {
+            val rootFolder = (Compile / resourceManaged).value / publicFolder
+            rootFolder.mkdirs()
+
+            Def.task {
+              if (
+                scala.sys.process
+                  .Process(
+                    List("npm", "run", "build", "--", "--emptyOutDir", "--outDir", rootFolder.getAbsolutePath),
+                    (client / baseDirectory).value
+                  )
+                  .! == 0
+              ) {
+                println(s"Generated static files in \${rootFolder}")
+                (rootFolder ** "*.*").get
+              } else {
+                println(s"Failed to generate static files in \${rootFolder}")
+                throw new IllegalStateException("Vite build failed")
+              }
+
+            }
+
+          }
+          .taskValue
+      )
+    case _ =>
       Seq()
+  }
 
 $if(scalablytyped.truthy)$
   //
   // ScalablyTyped settings
   //
   val scalablyTypedPlugin = mode match {
-    case "prod" => ScalablyTypedConverterPlugin
+    case "CommonJs" => ScalablyTypedConverterPlugin
     case _      => ScalablyTypedConverterExternalNpmPlugin
   }
   
   val scalablytypedSettings = mode match {
-    case "prod" =>
+    case "CommonJs" =>
       Seq(
         Compile / npmDependencies ++= Seq(
           "chart.js"        -> "$chartjs_version$",
@@ -112,7 +150,6 @@ $if(scalablytyped.truthy)$
       )
     case _ =>
       Seq(externalNpm := {
-        // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
         baseDirectory.value / "scalablytyped"
       })
   }
@@ -129,15 +166,17 @@ $endif$
       .toSeq
   
   def scalaJSPlugin = mode match {
-    case "prod" => ScalaJSBundlerPlugin
-    case _      => ScalaJSPlugin
+    case "CommonJs" => ScalaJSBundlerPlugin
+    case _          => ScalaJSPlugin
   }
 
-  def symlink(link: File, target: File): Unit =
+  def symlink(link: File, target: File): Unit = {
+    if (!(Files.exists(link.getParentFile.toPath)))
+      Files.createDirectories(link.getParentFile.toPath)
     if (!(Files.exists(link.toPath) || Files.isSymbolicLink(link.toPath)))
       if (Files.exists(target.toPath))
         Files.createSymbolicLink(link.toPath, link.toPath.getParent.relativize(target.toPath))
-
+  }
   def insureBuildEnvFile(baseDirectory: File, scalaVersion: String) = {
 
     val outputFile = baseDirectory / "scripts" / "target" / "build-env.sh"
@@ -169,12 +208,6 @@ $endif$
       writeBuildEnvFile()
     }
 
-    val versionFile = baseDirectory / "version.sbt"
-    if (!versionFile.exists()) {
-      IO.write(versionFile, s"""ThisBuild / version := "$version$"""")
-    }
-
-
   }
 
   lazy val dockerSettings = {
@@ -189,7 +222,15 @@ $endif$
       dockerRepository        := Some("$dockerRegistry$"),
       dockerUpdateLatest      := true,
       dockerExposedPorts      := Seq(8000)
-    )
+    ) ++ (overrideDockerRegistry match {
+      case true =>
+        Seq(
+          Docker / dockerRepository := Some("registry.orb.local"),
+          Docker / dockerUsername   := Some("zio-laminar-demo")
+        )
+      case false =>
+        Seq()
+    })
   }
 
 }

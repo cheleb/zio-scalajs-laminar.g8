@@ -1,6 +1,6 @@
 // scalafmt: { maxColumn = 120, style = defaultWithAlign }
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs"        % "1.17.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs"        % "1.18.2")
 addSbtPlugin("org.scala-js" % "sbt-jsdependencies" % "1.0.2")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler"     % "0.21.1")
@@ -18,11 +18,12 @@ addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
 addSbtPlugin("com.dwijnand"       % "sbt-dynver"               % "4.1.1")
 addSbtPlugin("com.github.sbt"     % "sbt-unidoc"               % "0.5.0")
 addSbtPlugin("com.github.sbt"     % "sbt-ghpages"              % "0.8.0")
-addSbtPlugin("com.github.sbt"     % "sbt-site-paradox"         % "1.5.0")
 // will reStart server on code modification.
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 $if(scalablytyped.truthy)$
 // TypeScript support
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
 $endif$// Giter8 support
-addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.16.2")
+addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.17.0")
+// Scalafix
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.0")

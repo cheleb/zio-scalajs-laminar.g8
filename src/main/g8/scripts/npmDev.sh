@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
+set -e
+. ./scripts/env.sh -d
 
-. ./scripts/env.sh
-
-. \$BUILD_ENV_FILE
+. $BUILD_ENV_FILE
 
 echo
 echo "Starting npm dev server for client"
-echo " * SCALA_VERSION=\$SCALA_VERSION"
+echo " * SCALA_VERSION=$SCALA_VERSION"
 sleep 3
 cd modules/client
 #DEBUG="vite:sourcemap" npm run dev
