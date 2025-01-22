@@ -11,10 +11,10 @@ set -e
 
 # This is a hack to force the build-env.sh file to be generated
 # And setup the project
-if [ ! -e $BUILD_ENV_FILE ]; then
+if [ ! -e \$BUILD_ENV_FILE ]; then
     sbt projects
 fi
 
 . ./scripts/setup-noninteractive.sh
 
-MOD=$BUILD_MOD sbt -mem 4096 "${BUILD_CLEAN}server/run"
+MOD=\$BUILD_MOD sbt -mem 4096 "\${BUILD_CLEAN}server/run"

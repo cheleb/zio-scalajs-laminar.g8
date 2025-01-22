@@ -6,7 +6,6 @@ import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 import $package$.domain.*
 import $package$.login.LoginPassword
-import sttp.model.HeaderNames
 
 object PersonEndpoint extends BaseEndpoint:
 

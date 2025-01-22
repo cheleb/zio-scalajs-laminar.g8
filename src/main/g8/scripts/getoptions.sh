@@ -9,7 +9,7 @@ BUILD_MOD="ESModule"
 BUILD_CLEAN=""
 
 usage() {
-    echo "Usage: $0 [-d] [-m] [-n] [-c] [-h]"
+    echo "Usage: \$0 [-d] [-m] [-n] [-c] [-h]"
     echo "  -d: Development mode"
     echo "  -m: Build ESModule"
     echo "  -n: Build CommonJs"
@@ -18,7 +18,7 @@ usage() {
 }
 
 while getopts ":d :m :n :c :h" opt; do
-    case ${opt} in
+    case \${opt} in
     d)
         BUILD_MOD="dev"
         ;;
@@ -36,10 +36,10 @@ while getopts ":d :m :n :c :h" opt; do
         exit 0
         ;;
     \?)
-        echo "Invalid option: $OPTARG" 1>&2
+        echo "Invalid option: \$OPTARG" 1>&2
         usage
         exit 1
         ;;
     esac
 done
-echo "Js Module: $BUILD_MOD"
+echo "Js Module: \$BUILD_MOD"

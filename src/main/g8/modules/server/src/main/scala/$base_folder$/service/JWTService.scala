@@ -3,7 +3,6 @@ package $package$.service
 import zio.*
 
 import java.time.Duration
-import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.time.Clock as JavaClock
 
@@ -13,8 +12,6 @@ import com.auth0.jwt.algorithms.Algorithm
 import $package$.config.Configs
 import $package$.config.JWTConfig
 import $package$.domain.*
-
-import sttp.model.Uri
 
 trait JWTService {
   def createToken(user: User): Task[UserToken]

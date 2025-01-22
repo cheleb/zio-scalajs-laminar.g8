@@ -65,7 +65,7 @@ object DeploymentSettings {
     case "CommonJs" =>
       Seq(
         Compile / compile              := ((Compile / compile) dependsOn scalaJSPipeline).value,
-        Assets / WebKeys.packagePrefix := s"$publicFolder/",
+        Assets / WebKeys.packagePrefix := s"\$publicFolder/",
         Runtime / managedClasspath += (Assets / packageBin).value,
         scalaJSProjects         := clientProjects,
         Assets / pipelineStages := Seq(scalaJSPipeline)

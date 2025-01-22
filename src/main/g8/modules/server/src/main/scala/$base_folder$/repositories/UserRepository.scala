@@ -11,9 +11,6 @@ import io.getquill.jdbczio.*
 import io.getquill.jdbczio.Quill.Postgres
 import io.scalaland.chimney.dsl.*
 
-import io.getquill.jdbczio.Quill.DataSource
-import io.getquill.context.jdbc.PostgresJdbcTypes
-
 trait UserRepository {
   def create(user: NewUserEntity): Task[UserEntity]
   def getById(id: Long): Task[Option[UserEntity]]

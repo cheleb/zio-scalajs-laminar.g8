@@ -1,7 +1,6 @@
 package $package$.http
 
 import zio.*
-import sttp.tapir.ztapir.*
 import sttp.tapir.server.ServerEndpoint
 import sttp.capabilities.zio.ZioStreams
 

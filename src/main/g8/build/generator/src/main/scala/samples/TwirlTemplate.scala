@@ -2,7 +2,6 @@ package samples
 
 import java.io.File
 
-import io.*
 import org.slf4j.LoggerFactory
 
 case class Config(
