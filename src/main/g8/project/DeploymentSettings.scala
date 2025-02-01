@@ -9,8 +9,10 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+$if(scalablytyped.truthy)$
 import org.scalablytyped.converter.plugin._
 import org.scalablytyped.converter.plugin.STKeys._
+$endif$
 import org.scalajs.sbtplugin._
 
 import play.twirl.sbt.SbtTwirl

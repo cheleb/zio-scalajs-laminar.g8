@@ -4,8 +4,10 @@ import com.raquo.laminar.api.L.*
 import frontroute.*
 
 import org.scalajs.dom
+$if(scalablytyped.truthy)$
 
 import $package$.app.demos.*
+$endif$
 
 object Router:
   val uiBase                     = "$public$"
@@ -34,9 +36,9 @@ object Router:
               path("demos" / "scalablytyped") {
                 scalablytyped.ScalablytypedDemoPage()
               }
+              $endif$
             )
           },
-          $endif$
           noneMatched {
             div("404 Not Found")
           }
