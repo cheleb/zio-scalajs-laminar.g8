@@ -54,10 +54,6 @@ pushd modules/client
 npmInstall
 popd
 
-pushd modules/shared/.js
-npmInstall
-popd
-
 #
 # Generating scalablytyped
 #
