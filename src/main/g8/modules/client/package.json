@@ -11,14 +11,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ui5/webcomponents": "2.1.0",
-    "@ui5/webcomponents-fiori": "2.1.0",
-    "@ui5/webcomponents-icons": "2.1.0",
+    "@ui5/webcomponents": "$webcomponents_version$",
+    "@ui5/webcomponents-fiori": "$webcomponents_version$",
+    "@ui5/webcomponents-icons": "$webcomponents_version$",
     "chart.js": "$chartjs_version$"
   },
   "devDependencies": {
     "@scala-js/vite-plugin-scalajs": "^1.0.0",
-    "vite": "^6.0.11",
-    "typescript": "5.7.2"
+    "vite": "^6.1.0",
+    "typescript": "$typescript_version$"
   }
 }

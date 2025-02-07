@@ -7,7 +7,7 @@
     "chart.js": "$chartjs_version$"
   },
   "devDependencies": {
-    "typescript": "5.7.2",
+    "typescript": "$typescript_version$",
     "@types/chart.js": "$chartts_version$"
   }
 }
