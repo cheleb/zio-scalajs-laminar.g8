@@ -60,12 +60,45 @@ lazy val root = project
   )
 
 //
+// Client project
+// It depends on sharedJs project, a project that contains shared code between server and client.
+//
+lazy val client = scalajsProject("client")
+$if(scalablytyped.truthy)$
+  .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
+$endif$
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    scalaJSLinkerConfig ~= { config =>
+      mode match {
+        case "ESModule" =>
+          config
+            .withModuleKind(ModuleKind.ESModule)
+        case _ =>
+          config
+            .withModuleKind(ModuleKind.ESModule)
+            .withSourceMap(false)
+            .withModuleSplitStyle(ModuleSplitStyle.FewestModules)
+      }
+    }
+  )
+  .settings(scalacOptions ++= usedScalacOptions)
+  .settings(clientLibraryDependencies)
+$if(scalablytyped.truthy)$
+  .settings(externalNpm := baseDirectory.value / "scalablytyped")
+$endif$
+  .dependsOn(sharedJs)
+  .settings(
+    publish / skip := true
+  )
+
+//
 // Server project
 // It depends on sharedJvm project, a project that contains shared code between server and client
 //
 lazy val server = project
   .in(file("modules/server"))
-  .enablePlugins(serverPlugins: _*)
+  .enablePlugins(SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .settings(
     staticGenerationSettings(generator, client)
   )
@@ -74,7 +107,7 @@ lazy val server = project
     serverLibraryDependencies,
     testingLibraryDependencies
   )
-  .settings(serverSettings(client): _*)
+  .settings(dockerSettings)
   .dependsOn(sharedJvm)
   .settings(
     publish / skip := true
@@ -89,49 +122,6 @@ val usedScalacOptions = Seq(
   "-Xmax-inlines:64",
   "-Wunused:all"
 )
-
-//
-// Client project
-// It depends on sharedJs project, a project that contains shared code between server and client.
-//
-lazy val client = scalajsProject("client")
-$if(scalablytyped.truthy)$
-  .enablePlugins(scalablyTypedPlugin)
-$endif$
-  .settings(
-    scalaJSUseMainModuleInitializer := true,
-    scalaJSLinkerConfig ~= { config =>
-      mode match {
-        case "CommonJs" =>
-          config
-            .withModuleKind(scalaJSModule)
-            .withMinify(true)
-            .withOptimizer(true)
-            .withClosureCompiler(true)
-
-        case "ESModule" =>
-          config
-            .withModuleKind(scalaJSModule)
-
-        case _ =>
-          config
-            .withModuleKind(scalaJSModule)
-            .withSourceMap(false)
-            .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("$package$")))
-      }
-    }
-  )
-  .settings(scalacOptions ++= usedScalacOptions)
-  .settings(clientLibraryDependencies)
-$if(scalablytyped.truthy)$
-  .settings(
-    scalablytypedSettings
-  )
-$endif$
-  .dependsOn(sharedJs)
-  .settings(
-    publish / skip := true
-  )
 
 //
 // Shared project
@@ -157,9 +147,8 @@ def scalajsProject(projectId: String): Project =
     id = projectId,
     base = file(s"modules/\$projectId")
   )
-    .enablePlugins(scalaJSPlugin)
+    .enablePlugins(ScalaJSPlugin)
     .disablePlugins(RevolverPlugin)
-    .settings(nexusNpmSettings)
     .settings(Test / requireJsDomEnv := true)
     .settings(
       scalacOptions := Seq(
@@ -170,6 +159,29 @@ def scalajsProject(projectId: String): Project =
       )
     )
 
+lazy val dockerSettings = {
+  import DockerPlugin.autoImport._
+  import DockerPlugin.globalSettings._
+  import sbt.Keys._
+  Seq(
+    Docker / maintainer     := "Joh doe",
+    Docker / dockerUsername := Some("$dockerRepo$"),
+    Docker / packageName    := "$projectId$",
+    dockerBaseImage         := "azul/zulu-openjdk-alpine:24-latest",
+    dockerRepository        := Some("$dockerRegistry$"),
+    dockerUpdateLatest      := true,
+    dockerExposedPorts      := Seq(8000)
+  ) ++ (overrideDockerRegistry match {
+    case true =>
+      Seq(
+        Docker / dockerRepository := Some("registry.orb.local"),
+        Docker / dockerUsername   := Some("zio-laminar-demo")
+      )
+    case false =>
+      Seq()
+  })
+}
+
 //
 // This is a global setting that will generate a build-env.sh file in the target directory.
 // This file will contain the SCALA_VERSION variable that can be used in the build process
@@ -178,17 +190,5 @@ Global / onLoad := {
 
   insureBuildEnvFile(baseDirectory.value, (client / scalaVersion).value)
 
-  // This is hack to share static files between server and client.
-  // It creates symlinks from server to client static files
-  // Ideally, we should use a shared folder for static files
-  // Or use a shared CDN
-  // Or copy the files to the target directory of the server at build time.
-  symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
-  symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
-  symlink(server.base / "src" / "main" / "public" / "res", client.base / "res")
-
-  symlink(server.base / "src" / "main" / "resources" / "public" / "img", client.base / "img")
-  symlink(server.base / "src" / "main" / "resources" / "public" / "css", client.base / "css")
-  symlink(server.base / "src" / "main" / "resources" / "public" / "res", client.base / "res")
   (Global / onLoad).value
 }

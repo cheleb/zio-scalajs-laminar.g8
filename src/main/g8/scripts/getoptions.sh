@@ -12,7 +12,6 @@ usage() {
     echo "Usage: \$0 [-d] [-m] [-n] [-c] [-h]"
     echo "  -d: Development mode"
     echo "  -m: Build ESModule"
-    echo "  -n: Build CommonJs"
     echo "  -c: Clean before building"
     echo "  -h: Display this help message"
 }
@@ -24,9 +23,6 @@ while getopts ":d :m :n :c :h" opt; do
         ;;
     m)
         BUILD_MOD="ESModule"
-        ;;
-    n)
-        BUILD_MOD="CommonJs"
         ;;
     c)
         BUILD_CLEAN="clean; "
