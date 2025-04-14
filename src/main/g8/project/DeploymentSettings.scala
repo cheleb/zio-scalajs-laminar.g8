@@ -20,7 +20,7 @@ object DeploymentSettings {
 //
 // Default is "demo" mode, because the vite build does not take parameters.
 //   (see vite.config.js)
-  val mode = sys.env.get("MOD").getOrElse("ESModule")
+  val mode = sys.env.get("MOD").getOrElse("dev")
 
   val overrideDockerRegistry = sys.env.get("LOCAL_DOCKER_REGISTRY").isDefined
 
