@@ -10,7 +10,7 @@ BUILD_CLEAN=""
 
 usage() {
     echo "Usage: \$0 [-d] [-m] [-n] [-c] [-h]"
-    echo "  -d: Development mode"
+    echo "  -d: Development mode (default)"
     echo "  -m: Build ESModule"
     echo "  -c: Clean before building"
     echo "  -h: Display this help message"

@@ -13,6 +13,8 @@ import io.getquill.jdbczio.Quill.Postgres
 
 trait PetRepository {
   def create(pet: PetEntity): Task[PetEntity]
+  def getAllCats(): Task[List[CatEntity]]
+  def getAllDogs(): Task[List[DogEntity]]
   def getCatById(id: Long): Task[Option[CatEntity]]
   def getDogById(id: Long): Task[Option[DogEntity]]
   def updateCat(id: Long, op: CatEntity => CatEntity): Task[CatEntity]
@@ -38,6 +40,12 @@ class PetRepositoryLive private (quill: Quill.Postgres[SnakeCase]) extends PetRe
       run(query[CatEntity].insertValue(lift(cat)).returning(r => r))
     case dog: DogEntity =>
       run(query[DogEntity].insertValue(lift(dog)).returning(r => r))
+
+  override def getAllCats(): Task[List[CatEntity]] =
+    run(query[CatEntity])
+
+  override def getAllDogs(): Task[List[DogEntity]] =
+    run(query[DogEntity])
 
   override def getCatById(id: Long): Task[Option[CatEntity]] =
     run(query[CatEntity].filter(_.id == lift(id))).map(_.headOption)

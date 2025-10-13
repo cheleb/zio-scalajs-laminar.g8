@@ -30,28 +30,7 @@ object DeploymentSettings {
 // On dev mode, server will only serve API and static files.
 //
 
-  def staticGenerationSettings(generator: Project, client: Project) = mode match {
-    case "CommonJs" =>
-      Seq(
-        Assets / resourceGenerators += Def
-          .taskDyn[Seq[File]] {
-            val rootFolder = (Assets / resourceManaged).value / publicFolder
-            rootFolder.mkdirs()
-            (generator / Compile / runMain).toTask {
-              Seq(
-                "samples.BuildIndex",
-                "--title",
-                s""""\${name.value} v2 \${version.value}"""",
-                "--version",
-                version.value,
-                "--resource-managed",
-                rootFolder
-              ).mkString(" ", " ", "")
-            }
-              .map(_ => (rootFolder ** "*.html").get)
-          }
-          .taskValue
-      )
+  def staticGenerationSettings(client: Project) = mode match {
     case "ESModule" =>
       val taskOutputDir = settingKey[File]("Resource directory for task output")
 

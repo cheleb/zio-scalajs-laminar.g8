@@ -30,7 +30,11 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     personService.getProfile(userId, withPet)
   }
   
-  override val routes: List[ServerEndpoint[Any, Task]] =List(create, login, profile)
+  val listPets: ServerEndpoint[Any, Task] = PersonEndpoint.listPets.zServerLogic { petType =>
+    personService.listPets(petType)
+  }
+  
+  override val routes: List[ServerEndpoint[Any, Task]] = List(create, login, profile, listPets)
 }
 
 object PersonController {
