@@ -16,6 +16,7 @@ name := "$name$"
 inThisBuild(
   List(
     scalaVersion      := scala3,
+    dependencyOverrides += "org.scala-lang" %% "scala3-library" % scala3,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
     scalacOptions ++= Seq(

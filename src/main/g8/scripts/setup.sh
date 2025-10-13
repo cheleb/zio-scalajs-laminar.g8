@@ -65,6 +65,7 @@ pushd modules/client
 npmInstall
 popd
 
+$if(scalablytyped.truthy)$
 #
 # Generating scalablytyped
 #
@@ -74,3 +75,4 @@ popd
 
 echo "Generating Scala.js bindings..."
 sbt -mem 8192 compile
+$endif$
