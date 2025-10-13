@@ -43,13 +43,12 @@ object HttpServer extends ZIOAppDefault {
       apiEndpoints <- HttpApi.endpoints
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(apiEndpoints, "$projectId$", "1.0.0")
-      _ <- Server.serve(
+      _ <- Server.serve:
              Routes(
                Method.GET / Root -> handler(Response.redirect(url"public/index.html"))
              ) ++
                ZioHttpInterpreter(serverOptions)
                  .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
-           )
     } yield ()
 
   private val program =

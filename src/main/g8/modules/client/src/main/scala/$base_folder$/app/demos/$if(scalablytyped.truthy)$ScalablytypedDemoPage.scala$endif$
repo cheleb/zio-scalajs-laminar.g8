@@ -5,8 +5,6 @@ import scala.scalajs.js.JSConverters.*
 
 import com.raquo.laminar.api.L.*
 
-import org.scalajs.dom
-
 object ScalablytypedDemoPage {
   final class DataItemID
 
@@ -37,7 +35,7 @@ object ScalablytypedDemoPage {
         tr(th("Label"), th("Value"), th("Action"))
       ),
       tbody(
-        children <-- dataSignal.split(_.id) { (id, initial, itemSignal) =>
+        children <-- dataSignal.split(_.id) { (id, _, itemSignal) =>
           renderDataItem(id, itemSignal)
         }
       ),
@@ -123,7 +121,7 @@ object ScalablytypedDemoPage {
           )
           optChart = Some(chart)
         },
-        unmount = { thisNode =>
+        unmount = { _ =>
           for (chart <- optChart)
             chart.destroy()
           optChart = None

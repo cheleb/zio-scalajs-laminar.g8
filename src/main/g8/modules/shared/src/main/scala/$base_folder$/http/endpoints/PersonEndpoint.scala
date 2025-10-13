@@ -6,6 +6,7 @@ import sttp.tapir.json.zio.*
 import sttp.tapir.generic.auto.*
 import $package$.domain.*
 import $package$.login.LoginPassword
+import sttp.tapir.EndpointIO.Example
 
 object PersonEndpoint extends BaseEndpoint:
 
@@ -50,3 +51,16 @@ object PersonEndpoint extends BaseEndpoint:
     .in(query[Boolean]("withPet").default(false))
     .out(jsonBody[(User, Option[Pet])])
     .description("Get profile")
+
+  val listPets: Endpoint[Unit, PetType, Throwable, List[Pet], Any] = baseEndpoint
+    .tag("person")
+    .name("pets")
+    .get
+    .in("pets")
+    .in(
+      query[PetType]("t")
+        .default(PetType.Dog)
+        .examples(PetType.values.map(v => Example(v, Some(v.toString), Some(v.toString))).toList)
+    )
+    .out(jsonBody[List[Pet]])
+    .description("List pets")

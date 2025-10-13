@@ -29,26 +29,12 @@ inThisBuild(
   )
 )
 
-//
-// This is static generation settings to be used in server project
-// Illustrate how to use the generator project to generate static files with twirl
-//
-lazy val generator = project
-  .in(file("build/generator"))
-  .enablePlugins(SbtTwirl)
-  .disablePlugins(RevolverPlugin)
-  .settings(staticFilesGeneratorDependencies)
-  .settings(
-    publish / skip := true
-  )
-
 // Aggregate root project
 // This is the root project that aggregates all other projects
 // It is used to run tasks on all projects at once.
 lazy val root = project
   .in(file("."))
   .aggregate(
-    generator,
     server,
     sharedJs,
     sharedJvm,
@@ -100,7 +86,7 @@ lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .settings(
-    staticGenerationSettings(generator, client)
+    staticGenerationSettings(client)
   )
   .settings(
     fork := true,

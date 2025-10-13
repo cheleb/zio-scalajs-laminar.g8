@@ -7,6 +7,17 @@ set -e
 #
 . ./scripts/env.sh
 
+# Function to get file modification time in a cross-platform way
+get_file_mtime() {
+    if [[ "\$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        stat -f %m "\$1"
+    else
+        # Linux
+        stat -c %Y "\$1"
+    fi
+}
+
 if [ ! -e \$BUILD_ENV_FILE ]; then
     echo "Waiting for \$BUILD_ENV_FILE to be generated..."
     echo '  Import the project !!!'
@@ -33,8 +44,8 @@ function npmInstall() {
         npm i
     else
         filename=package.json
-        age=\$(stat -t %s -f %m -- "\$filename")
-        age_lock=\$(stat -t %s -f %m -- "\$filename_lock")
+        age=\$(get_file_mtime "\$filename")
+        age_lock=\$(get_file_mtime "\$filename_lock")
         if [ \$age_lock -lt \$age ]; then
             echo "Updating npm dependencies..."
             npm i

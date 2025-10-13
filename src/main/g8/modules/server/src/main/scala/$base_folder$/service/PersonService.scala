@@ -26,6 +26,7 @@ trait PersonService {
   def register(person: Person): Task[User]
   def login(email: String, password: String): Task[User]
   def getProfile(userId: UserID, withPet: Boolean): Task[(User, Option[Pet])]
+  def listPets(petType: PetType): Task[List[Pet]]
 }
 
 class PersonServiceLive private (
@@ -35,32 +36,43 @@ class PersonServiceLive private (
 ) extends PersonService
     with TransactionSupport(quill) {
 
+  override def listPets(petType: PetType): Task[List[Pet]] =
+    petType match
+      case PetType.Cat =>
+        petRepository
+          .getAllCats()
+          .map(_.map(_.into[Cat].transform))
+      case PetType.Dog =>
+        petRepository
+          .getAllDogs()
+          .map(_.map(_.into[Dog].transform))
+
   def register(person: Person): Task[User] =
     if person.age < 18 then ZIO.fail(TooYoungException(person.age))
     else
       tx(
         for {
-          _ <- ZIO.logDebug(s"Registering user: \$person")
+          _           <- ZIO.logDebug(s"Registering user: \$person")
           newPetEntity = person.pet.fold(PetEntity.apply, PetEntity.apply)
-          petEntity <- petRepository.create(newPetEntity)
-          user <- userRepository
-                    .create(
-                      NewUserEntity(
-                        None,
-                        name = person.name,
-                        email = person.email,
-                        hashedPassword = Hasher.generatedHash(person.password.toString),
-                        petType = Some(person.pet.fold(_ => PetType.Cat, _ => PetType.Dog)),
-                        petId = Some(petEntity.id),
-                        age = person.age,
-                        creationDate = ZonedDateTime.now()
-                      )
-                    )
-                    .catchSome { case e: SQLException =>
-                      ZIO.logError(s"Error code: \${e.getSQLState} while creating user: \${e.getMessage}")
-                        *> ZIO.fail(UserAlreadyExistsException())
-                    }
-                    .mapInto[User]
+          petEntity   <- petRepository.create(newPetEntity)
+          user        <- userRepository
+                           .create(
+                             NewUserEntity(
+                               None,
+                               name = person.name,
+                               email = person.email,
+                               hashedPassword = Hasher.generatedHash(person.password.toString),
+                               petType = Some(person.pet.fold(_ => PetType.Cat, _ => PetType.Dog)),
+                               petId = Some(petEntity.id),
+                               age = person.age,
+                               creationDate = ZonedDateTime.now()
+                             )
+                           )
+                           .catchSome { case e: SQLException =>
+                             ZIO.logError(s"Error code: \${e.getSQLState} while creating user: \${e.getMessage}")
+                               *> ZIO.fail(UserAlreadyExistsException())
+                           }
+                           .mapInto[User]
         } yield user
       )
   override def login(email: String, password: String): Task[User] =
