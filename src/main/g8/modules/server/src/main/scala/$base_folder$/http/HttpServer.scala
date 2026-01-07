@@ -21,6 +21,11 @@ object HttpServer extends ZIOAppDefault {
     "public"
   )
 
+  private val webJarRoutesAssets = staticResourcesGetServerEndpoint[Task]("assets")(
+    this.getClass.getClassLoader,
+    "public/assets"
+  )
+
   val serverOptions: ZioHttpServerOptions[Any] =
     ZioHttpServerOptions.customiseInterceptors
       .metricsInterceptor(metricsInterceptor)
@@ -48,7 +53,7 @@ object HttpServer extends ZIOAppDefault {
                Method.GET / Root -> handler(Response.redirect(url"public/index.html"))
              ) ++
                ZioHttpInterpreter(serverOptions)
-                 .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
+                 .toHttp(metricsEndpoint :: webJarRoutes :: webJarRoutesAssets :: apiEndpoints ::: docEndpoints)
     } yield ()
 
   private val program =

@@ -1,13 +1,6 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 import Dependencies._
-//
-// Will handle different build modes:
-// - prod: production mode, aka with BFF and webjar deployment
-// - demo: demo mode (default)
-// - dev:  development mode
-//
-import DeploymentSettings._
 
 val scala3 = "$scala_version$"
 
@@ -15,15 +8,16 @@ name := "$name$"
 
 inThisBuild(
   List(
-    scalaVersion      := scala3,
+    scalaVersion                            := scala3,
+    fullstackJsProject                      := client,
+    fullstackJvmProject                     := Some(server),
     dependencyOverrides += "org.scala-lang" %% "scala3-library" % scala3,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
+    semanticdbEnabled                       := true,
+    semanticdbVersion                       := scalafixSemanticdb.revision,
     scalacOptions ++= Seq(
       "-deprecation",
       "-feature",
       "-Wunused:all"
-//      "-Xfatal-warnings"
     ),
     run / fork := true,
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
@@ -57,17 +51,17 @@ $endif$
   .settings(
     scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { config =>
-      mode match {
-        case "ESModule" =>
-          config
-            .withModuleKind(ModuleKind.ESModule)
-        case _ =>
-          config
-            .withModuleKind(ModuleKind.ESModule)
-            .withSourceMap(false)
-            .withModuleSplitStyle(ModuleSplitStyle.FewestModules)
-      }
+      //     mode match {
+//           case "ESModule" =>
+      config
+        .withModuleKind(ModuleKind.ESModule)
+      //       case _ =>
+      //         config
+      //           .withModuleKind(ModuleKind.ESModule)
+      //           .withSourceMap(false)
+      //           .withModuleSplitStyle(ModuleSplitStyle.FewestModules)
     }
+    //   }
   )
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(clientLibraryDependencies)
@@ -85,9 +79,9 @@ $endif$
 //
 lazy val server = project
   .in(file("modules/server"))
-  .enablePlugins(SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
+  .enablePlugins(FullstackPlugin, SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .settings(
-    staticGenerationSettings(client)
+    fullstackJsProject := client
   )
   .settings(
     fork := true,
@@ -146,6 +140,9 @@ def scalajsProject(projectId: String): Project =
       )
     )
 
+val overrideDockerRegistry = sys.env.get("LOCAL_DOCKER_REGISTRY").isDefined
+
+
 lazy val dockerSettings = {
   import DockerPlugin.autoImport._
   import DockerPlugin.globalSettings._
@@ -167,15 +164,4 @@ lazy val dockerSettings = {
     case false =>
       Seq()
   })
-}
-
-//
-// This is a global setting that will generate a build-env.sh file in the target directory.
-// This file will contain the SCALA_VERSION variable that can be used in the build process
-//
-Global / onLoad := {
-
-  insureBuildEnvFile(baseDirectory.value, (client / scalaVersion).value)
-
-  (Global / onLoad).value
 }

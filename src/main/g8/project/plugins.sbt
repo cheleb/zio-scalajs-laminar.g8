@@ -1,6 +1,6 @@
 // scalafmt: { maxColumn = 120, style = defaultWithAlign }
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs"        % "1.20.1")
+addSbtPlugin("org.scala-js" % "sbt-scalajs"        % "1.20.2")
 addSbtPlugin("org.scala-js" % "sbt-jsdependencies" % "1.0.2")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler"     % "0.21.1")
@@ -24,5 +24,7 @@ $if(scalablytyped.truthy) $
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
 $endif$ // Giter8 support
 addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.18.0")
+addSbtPlugin("dev.cheleb"               % "sbt-fullstack-js"    % "0.3.0")
+
 // Scalafix
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.3")

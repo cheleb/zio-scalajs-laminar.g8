@@ -19,7 +19,7 @@
         {
             "label": "setup",
             "type": "shell",
-            "command": "./scripts/setup.sh",
+            "command": "./init.sh",
             "presentation": {
                 "panel": "dedicated",
                 "group": "runDevCmd",
@@ -60,7 +60,7 @@
                 "id": "browser"
             },
             "type": "shell",
-            "command": "./scripts/fastLink.sh",
+            "command": "./scripts-managed/fastLink.sh",
             "presentation": {
                 "panel": "shared",
                 "group": "front"
@@ -73,7 +73,7 @@
                 "id": "server-process"
             },
             "type": "shell",
-            "command": "./scripts/serverRun.sh",
+            "command": "./scripts-managed/serverRun.sh",
             "presentation": {
                 "panel": "shared",
                 "group": "back"
@@ -86,7 +86,7 @@
                 "id": "package"
             },
             "type": "shell",
-            "command": "./scripts/npmDev.sh",
+            "command": "./scripts-managed/npmDev.sh",
             "presentation": {
                 "panel": "shared",
                 "group": "front"

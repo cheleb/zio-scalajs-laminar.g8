@@ -1,6 +1,8 @@
+# This folder is managed by SBT (sbt-fullstack-js plugin)
+/scripts-managed/
 target/
 node_modules/
-package-lock.json
+
 dist/
 *.bak
 .bloop/
