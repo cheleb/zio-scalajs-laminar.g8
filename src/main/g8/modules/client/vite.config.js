@@ -17,8 +17,6 @@ export default defineConfig({
     })],
     build: {
         sourcemap: 'inline',
-    },
-    base: "/$public$/",
-
+    }
 });
 

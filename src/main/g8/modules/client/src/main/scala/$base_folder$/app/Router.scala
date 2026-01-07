@@ -10,8 +10,8 @@ import $package$.app.demos.*
 $endif$
 
 object Router:
-  val uiBase                     = "$public$"
-  def uiRoute(segments: String*) = segments.mkString(s"/\$uiBase/", "/", "")
+
+  def uiRoute(segments: String*) = segments.mkString("/")
   private val externalUrlBus     = EventBus[String]()
   val writer                     = externalUrlBus.writer
   def apply() =
@@ -22,23 +22,21 @@ object Router:
           styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
           // potentially children
 
-          pathPrefix(uiBase) {
-            firstMatch(
-              (pathEnd | path("index.html")) {
-                HomePage()
-              },
-              path("signup") {
-                signup.SignupPage()
-              },
-              path("profile") {
-                profile.ProfilePage()
-              }$if(scalablytyped.truthy)$,
-              path("demos" / "scalablytyped") {
-                scalablytyped.ScalablytypedDemoPage()
-              }
-              $endif$
-            )
-          },
+          firstMatch(
+            (pathEnd | path("index.html")) {
+              HomePage()
+            },
+            path("signup") {
+              signup.SignupPage()
+            },
+            path("profile") {
+              profile.ProfilePage()
+            }$if(scalablytyped.truthy)$,
+            path("demos" / "scalablytyped") {
+              scalablytyped.ScalablytypedDemoPage()
+            }
+            $endif$
+          ),
           noneMatched {
             div("404 Not Found")
           }

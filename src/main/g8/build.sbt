@@ -81,7 +81,8 @@ lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(FullstackPlugin, SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .settings(
-    fullstackJsProject := client
+    fullstackJsProject := client,
+    fullstackJsAssets  := Seq()
   )
   .settings(
     fork := true,
@@ -141,7 +142,6 @@ def scalajsProject(projectId: String): Project =
     )
 
 val overrideDockerRegistry = sys.env.get("LOCAL_DOCKER_REGISTRY").isDefined
-
 
 lazy val dockerSettings = {
   import DockerPlugin.autoImport._

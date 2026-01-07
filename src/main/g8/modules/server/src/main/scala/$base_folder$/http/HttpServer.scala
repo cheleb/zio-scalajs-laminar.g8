@@ -16,14 +16,9 @@ import $package$.repositories.*
 
 object HttpServer extends ZIOAppDefault {
 
-  private val webJarRoutes = staticResourcesGetServerEndpoint[Task]("$public$")(
+  private val staticRoutes = staticResourcesGetServerEndpoint[Task](emptyInput)(
     this.getClass.getClassLoader,
     "public"
-  )
-
-  private val webJarRoutesAssets = staticResourcesGetServerEndpoint[Task]("assets")(
-    this.getClass.getClassLoader,
-    "public/assets"
   )
 
   val serverOptions: ZioHttpServerOptions[Any] =
@@ -49,11 +44,8 @@ object HttpServer extends ZIOAppDefault {
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(apiEndpoints, "$projectId$", "1.0.0")
       _ <- Server.serve:
-             Routes(
-               Method.GET / Root -> handler(Response.redirect(url"public/index.html"))
-             ) ++
                ZioHttpInterpreter(serverOptions)
-                 .toHttp(metricsEndpoint :: webJarRoutes :: webJarRoutesAssets :: apiEndpoints ::: docEndpoints)
+                 .toHttp(metricsEndpoint :: staticRoutes :: apiEndpoints ::: docEndpoints)
     } yield ()
 
   private val program =

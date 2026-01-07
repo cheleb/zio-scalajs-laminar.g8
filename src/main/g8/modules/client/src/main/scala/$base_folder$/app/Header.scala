@@ -30,7 +30,7 @@ object Header:
       ShellBar(
         _.slots.startButton := a(
           Icon(_.name := IconName.home, cls := "pad-10"),
-          href := Router.uiRoute()
+          href := "/"
         ),
         _.primaryTitle       := "$name$",
         _.secondaryTitle     := "$short-description$",
